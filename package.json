@@ -1,0 +1,28 @@
+{
+  "name": "adaburrows-table",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/adaburrows-table.es.js",
+  "exports": {
+    ".": "./dist/adaburrows-table.es.js"
+  },
+  "types": "types/adaburrows-table.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build"
+  },
+  "dependencies": {
+    "@lit-labs/context": "^0.2.0",
+    "@lit-labs/scoped-registry-mixin": "^1.0.1",
+    "@webcomponents/scoped-custom-element-registry": "^0.0.7",
+    "lit": "^2.6.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3",
+    "vite": "^4.0.4"
+  }
+}
