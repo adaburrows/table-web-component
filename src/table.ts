@@ -4,23 +4,37 @@ import { property } from 'lit/decorators.js'
 import { consume } from '@lit-labs/context';
 import { TableStore, TableStoreContext } from './table-store';
 import { map } from 'lit/directives/map.js';
+import { get } from 'svelte/store';
+import { StoreSubscriber } from 'lit-svelte-stores';
 
 /**
- * An example element.
- *
- * @slot - This element has a slot
- * @csspart button - The button
+ * Table component that supports creating synthetic fields, decorating fields
+ * with components, setting up colgroups, and sorting.
  */
 export class Table extends ScopedRegistryHost(LitElement) {
+  public storeSubscriber: StoreSubscriber<{}>;
 
+  /**
+   * This property can either be provided directly, or can be provided by a context
+   */
   @consume({context: TableStoreContext, subscribe: true})
   @property({type: Object})
-  public tableStore!: TableStore;
+  public tableStore!: TableStore<any>;
 
+  constructor() {
+    super();
+
+    // Set up lit-svelte-stores controller
+    this.storeSubscriber = new StoreSubscriber(this, () => this.tableStore);
+  }
+
+  /**
+   * Renders the table based on current data and table state
+   */
   render() {
-    const headings = this.tableStore.getHeadings().map((fieldDef) => fieldDef.heading);
-    const fields = this.tableStore?.getFields();
-    const data = this.tableStore.getData();
+    const headings = get(this.tableStore.getHeadings());
+    const fields = get(this.tableStore.getFields());
+    const records = get(this.tableStore.getRecords());
     return html`
     <table>
       <caption></caption>
@@ -33,12 +47,10 @@ export class Table extends ScopedRegistryHost(LitElement) {
         </tr>
       </thead>
       <tbody>
-        ${map(data, (row) => html`
+        ${map(records, (record) => html`
         <tr>
           ${
-            //TODO: wrap in decorators
-            // @ts-ignore
-            map(fields, (field) => html`<td>${row[field]}</td>`)
+            map(fields, (field) => html`<td>${this.tableStore.decorateField(field, record[field])}</td>`)
           }
         </tr>
         `)}

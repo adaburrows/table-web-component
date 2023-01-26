@@ -1,25 +1,27 @@
-type Synthesizer<T> = (data: T) => any;
-type Decorator = (field: any) => any;
-type Sort<T> = (a: T, b: T) => number;
+import { TemplateResult } from "lit";
 
-export function undefinedFunc<T> (..._args: [T]) { return undefined }
+type SynthesizerFunc<T> = (data: T) => any;
+type DecoratorFunc = (field: any) => TemplateResult;
+type SortFunc<T> = (a: T, b: T) => number;
 
-export class FieldDefinition<T extends Object > {
-  heading: String = '';
-  synthesizer: Synthesizer<T> = undefinedFunc;
-  decorator: Decorator = undefinedFunc;
-  sort: Sort<T> = (..._args) => 0;
+interface FieldDefinitionProps<T> {
+  heading: string;
+  synthesizer?: SynthesizerFunc<T>;
+  decorator?: DecoratorFunc;
+  sort?: SortFunc<T>;
+}
 
-  constructor(
-    heading: String,
-    synthesizer?: Synthesizer<T>,
-    decorator?: Decorator,
-    sort?: Sort<T>)
-  {
-    this.heading = heading;
-    if (synthesizer) { this.synthesizer = synthesizer }
-    if (decorator) { this.decorator = decorator }
-    if (sort) { this.sort = sort }
+export class FieldDefinition<T extends {}> implements FieldDefinitionProps<T> {
+  heading: string = '';
+  synthesizer?: SynthesizerFunc<T>;
+  decorator?: DecoratorFunc;
+  sort?: SortFunc<T>;
+
+  constructor(init: FieldDefinitionProps<T>) {
+    this.heading = init.heading;
+    if (init.synthesizer) this.synthesizer = init.synthesizer
+    if (init.decorator) this.decorator = init.decorator
+    if (init.sort) this.sort = init.sort
   }
 }
 
