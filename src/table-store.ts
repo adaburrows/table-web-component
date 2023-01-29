@@ -15,11 +15,25 @@ type Invalidator<T> = (value?: T) => void;
 type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidator<T>];
 
 /**
+ * Column Group Interface for setting attributes on <col> elements
+ */
+export interface ColGroup {
+  span?: number,
+  class?: string
+}
+
+export type SortDirection = 'asc' | 'dsc';
+
+/**
  * Allows easily passing in the field definitions and records
  */
-interface TableStoreProps<T extends {}> {
+export interface TableStoreProps<T extends {}> {
   fieldDefs?: FieldDefinitions<T>
-  records?: T[]
+  records?: T[],
+  caption?: string,
+  colGroups?: ColGroup[],
+  sortField?: string,
+  sortDirection?: SortDirection
 }
 
 /**
@@ -29,9 +43,14 @@ interface TableStoreProps<T extends {}> {
  * changes and call requestUpdate. For simplicity sake, any change using the
  * setters will cause a rerender.
  */
-export class TableStore<T extends {}> implements Readable<{}> {
+export class TableStore<T extends object> implements Readable<{}> {
   #_fieldDefs: Writable<FieldDefinitions<T>> = writable({} as FieldDefinitions<T>);
   #_records: Writable<Array<T>> = writable([]);
+  #_caption: Writable<string | undefined> = writable(undefined);
+  #_colGroups: Writable<Array<ColGroup>> = writable([]);
+  #_sortDirection: Writable<SortDirection> = writable('asc');
+  #_sortField: Writable<string> = writable('');
+
   #_subscribers: Set<SubscribeInvalidateTuple<T>> = new Set();
   #_subscriberQueue: Array<any> = [];
   #_stop?: Unsubscriber;
@@ -39,6 +58,10 @@ export class TableStore<T extends {}> implements Readable<{}> {
   constructor(init: TableStoreProps<T>) {
     if (init.fieldDefs) this.#_fieldDefs.set(init.fieldDefs);
     if (init.records) this.#_records.set(init.records);
+    if (init.caption) this.#_caption.set(init.caption);
+    if (init.colGroups) this.#_colGroups.set(init.colGroups);
+    if (init.sortDirection) this.#_sortDirection.set(init.sortDirection)
+    if (init.sortField) this.#_sortField.set(init.sortField);
   }
 
   get fieldDefs() {
@@ -57,6 +80,40 @@ export class TableStore<T extends {}> implements Readable<{}> {
   set records(records: T[]) {
     this.#_records.set(records);
     this.set();
+  }
+
+  get caption() {
+    return get(this.#_caption);
+  }
+
+  set caption(caption) {
+    this.#_caption.set(caption);
+    this.set();
+  }
+
+  get colGroups() {
+    return get(this.#_colGroups);
+  }
+
+  set colGroups(colGroups) {
+    this.#_colGroups.set(colGroups);
+    this.set();
+  }
+
+  get sortDirection() {
+    return get(this.#_sortDirection);
+  }
+
+  set sortDirection(direction: SortDirection) {
+    this.#_sortDirection.set(direction);
+  }
+
+  get sortField() {
+    return get(this.#_sortField);
+  }
+
+  set sortField(field: string) {
+    this.#_sortField.set(field);
   }
 
   /**
@@ -138,10 +195,50 @@ export class TableStore<T extends {}> implements Readable<{}> {
   }
 
   /**
+   * Returns a sorting function or undefined
+   */
+  getSortingFunction() {
+    if (
+      this.sortField != ''
+      && this.fieldDefs[this.sortField]
+      && this.fieldDefs[this.sortField].sort
+    ) {
+      const sort = this.fieldDefs[this.sortField].sort;
+      const sign = this.sortDirection == 'dsc' ? -1 : 1;
+      return (a: T, b: T) => {
+        if (this.sortField in a && this.sortField in b) {
+          // @ts-ignore
+          return sign * sort(a[this.sortField], b[this.sortField]);
+        }
+        // No sorting field, leave out of order
+        return 0;
+      }
+    } else {
+      return undefined;
+    }
+  }
+
+  /**
+   * Sorts rows after fields are synthesized
+   */
+  sort(originalRecords: T[]): T[] {
+    const records = originalRecords;
+    if (this.sortField != '') {
+      return records.sort(this.getSortingFunction());
+    }
+    return records;
+  }
+
+  /**
    * Returns the current records with synthesized fields
    */
   getRecords(): Readable<T[]> {
-    return derived(this.#_records, (records) => records.map((record) => this.synthesizeFields(record)));
+    return derived(
+      this.#_records,
+      (records) => this.sort(records.map(
+        (record) => this.synthesizeFields(record)
+      ))
+    );
   }
 
   /**

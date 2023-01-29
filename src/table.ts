@@ -6,6 +6,7 @@ import { TableStore, TableStoreContext } from './table-store';
 import { map } from 'lit/directives/map.js';
 import { get } from 'svelte/store';
 import { StoreSubscriber } from 'lit-svelte-stores';
+import { FieldDefinitions } from './field-definitions';
 
 /**
  * Table component that supports creating synthetic fields, decorating fields
@@ -29,36 +30,109 @@ export class Table extends ScopedRegistryHost(LitElement) {
   }
 
   /**
-   * Renders the table based on current data and table state
+   * Render the caption
    */
-  render() {
-    const headings = get(this.tableStore.getHeadings());
+  caption() {
+    const caption = this.tableStore.caption;
+    if (caption && caption != '') {
+      return html`<caption>${caption}</caption>`
+    }
+    return html``;
+  }
+
+  /**
+   * Render the <colgroup> and <col>s.
+   */
+  colGroup() {
+    const colGroups = this.tableStore.colGroups;
+    return html`
+    <colgroup>
+      ${map(
+        colGroups,
+        (c) => html`<col span="${c.span}" class="${c.class}">`
+      )}
+    </colgroup>`;
+  }
+
+  /**
+   * Render the heading for column, adding sorting controls if sort function is present
+   */
+  heading(fieldDefs: FieldDefinitions<any>, field: string) {
+    const heading = fieldDefs[field].heading;
+    if (fieldDefs[field] && fieldDefs[field].sort) {
+      // decorate with sorting controls
+      console.log('should wrap in sorting control')
+    }
+    return html`<th>${heading}</th>`
+  }
+
+  /**
+   * Render the header
+   */
+  header() {
+    const fieldDefs = this.tableStore.fieldDefs;
+    const fields = get(this.tableStore.getFields());
+    return html`
+    <thead>
+      <tr>
+        ${map(
+          fields,
+          (field) => this.heading(fieldDefs, field)
+        )}
+      </tr>
+    </thead>`;
+  }
+
+  /**
+   * Render a row
+   */
+  row(record: any, fields: string[]) {
+    return html`
+    <tr>
+      ${map(
+        fields,
+        (field) => html`<td>${this.tableStore.decorateField(field, record[field])}</td>`
+      )}
+    </tr>`;
+  }
+
+  /**
+   * Render the rows in the body.
+   */
+  body() {
     const fields = get(this.tableStore.getFields());
     const records = get(this.tableStore.getRecords());
     return html`
+    <tbody>
+      ${map(
+        records,
+        (record) => html`${this.row(record, fields)}`
+      )}
+    </tbody>`;
+  }
+
+  /**
+   * Render the footer.
+   * TODO: need to implement footer template logic.
+   */
+  foot() {
+    html`
+    <tfoot>
+    </tfoot>`;
+  }
+
+  /**
+   * Renders the table based on current data and table state
+   */
+  render() {
+    return html`
     <table>
-      <caption></caption>
-      <colgroup>
-        <!-- Need to add colgroup support -->
-      </colgroup>
-      <thead>
-        <tr>
-          ${map(headings, (h) => html`<th>${h}</th>`)}
-        </tr>
-      </thead>
-      <tbody>
-        ${map(records, (record) => html`
-        <tr>
-          ${
-            map(fields, (field) => html`<td>${this.tableStore.decorateField(field, record[field])}</td>`)
-          }
-        </tr>
-        `)}
-      </tbody>
-      <tfoot>
-      </tfoot>
-    </table>
-    `
+      ${this.caption()}
+      ${this.colGroup()}
+      ${this.header()}
+      ${this.body()}
+      ${this.foot()}
+    </table>`;
   }
 
   static styles = css`
