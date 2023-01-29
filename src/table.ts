@@ -1,12 +1,13 @@
-import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { LitElement, css, html } from 'lit'
+import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { property } from 'lit/decorators.js'
 import { consume } from '@lit-labs/context';
-import { TableStore, TableStoreContext } from './table-store';
 import { map } from 'lit/directives/map.js';
 import { get } from 'svelte/store';
 import { StoreSubscriber } from 'lit-svelte-stores';
 import { FieldDefinitions } from './field-definitions';
+import { TableStore, TableStoreContext } from './table-store';
+import { renderColGroupStyles } from './table-colgroup-style-directive';
 
 /**
  * Table component that supports creating synthetic fields, decorating fields
@@ -46,6 +47,7 @@ export class Table extends ScopedRegistryHost(LitElement) {
   colGroup() {
     const colGroups = this.tableStore.colGroups;
     return html`
+    ${renderColGroupStyles(colGroups)}
     <colgroup>
       ${map(
         colGroups,
@@ -144,18 +146,38 @@ export class Table extends ScopedRegistryHost(LitElement) {
     border-spacing: var(--table-border-spacing);
   }
 
-  th {
-    border-width: var(--table-cell-border-width);
-    border-color: var(--table-cell-border-color);
-    border-style: var(--table-cell-border-style);
-    border-radius: var(--table-cell-border-radius);
+  thead th {
+    border-width: var(--table-header-heading-border-width);
+    border-color: var(--table-header-heading-border-color);
+    border-style: var(--table-header-heading-border-style);
+    border-radius: var(--table-header-heading-border-radius);
   }
 
-  td {
-    border-width: var(--table-cell-border-width);
-    border-color: var(--table-cell-border-color);
-    border-style: var(--table-cell-border-style);
-    border-radius: var(--table-cell-border-radius);
+  tbody th {
+    border-width: var(--table-body-heading-border-width);
+    border-color: var(--table-body-heading-border-color);
+    border-style: var(--table-body-heading-border-style);
+    border-radius: var(--table-body-heading-border-radius);
   }
-  `
+
+  tbody td {
+    border-width: var(--table-body-cell-border-width);
+    border-color: var(--table-body-cell-border-color);
+    border-style: var(--table-body-cell-border-style);
+    border-radius: var(--table-body-cell-border-radius);
+  }
+
+  tfoot th {
+    border-width: var(--table-footer-heading-border-width);
+    border-color: var(--table-footer-heading-border-color);
+    border-style: var(--table-footer-heading-border-style);
+    border-radius: var(--table-footer-heading-border-radius);
+  }
+
+  tfoot td {
+    border-width: var(--table-footer-cell-border-width);
+    border-color: var(--table-footer-cell-border-color);
+    border-style: var(--table-footer-cell-border-style);
+    border-radius: var(--table-footer-cell-border-radius);
+  }`
 }

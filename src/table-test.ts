@@ -69,8 +69,9 @@ const tableProps: TableStoreProps<Example> = {
   caption: "Howdy! This is a table caption.",
   colGroups: [
     {}, // empty for ID column
-    {span: 2, class: 'descriptive'},
-    {span: 2, class: 'numeric'}
+    {span: 2, class: 'descriptive-group'},
+    {span: 2, class: 'numeric-group'},
+    {span: 1, class: 'synthetic-group'}
   ],
   sortDirection: 'dsc',
   sortField: 'age'

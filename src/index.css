@@ -9,15 +9,40 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --table-border-width: 0px 1px 1px 0px;
+  --table-border-width: 0px 0px 1px 0px;
   --table-border-color: black;
   --table-border-style: solid;
   --table-border-collapse: separate;
   --table-border-spacing: 0px 0px;
-  --table-cell-border-width: 1px 0px 0px 1px;
-  --table-cell-border-color: black;
-  --table-cell-border-style: solid;
-  --table-cell-border-radius: 0;
+
+  --table-header-heading-border-width: 0px 0px 2px 0px ;
+  --table-header-heading-border-color: black;
+  --table-header-heading-border-style: solid;
+  --table-header-heading-border-radius: 0px;
+
+  --table-body-heading-border-width: 1px 0px 0px 1px;
+  --table-body-heading-border-color: black;
+  --table-body-heading-border-style: solid;
+  --table-body-heading-border-radius: 0;
+
+  --table-body-cell-border-width: 1px 0px 0px 1px;
+  --table-body-cell-border-color: black;
+  --table-body-cell-border-style: solid;
+  --table-body-cell-border-radius: 0;
+
+  --table-footer-heading-border-width: ;
+  --table-footer-heading-border-color: ;
+  --table-footer-heading-border-style: ;
+  --table-footer-heading-border-radius: ;
+
+  --table-footer-cell-border-width: ;
+  --table-footer-cell-border-color: ;
+  --table-footer-cell-border-style: ;
+  --table-footer-cell-border-radius: ;
+
+  --descriptive-group-color: rgb(241, 120, 140);
+  --numeric-group-color: rgb(213, 120, 241);
+  --synthetic-group-color: rgb(120, 241, 170);
 }
 
 a {
