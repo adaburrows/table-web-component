@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit'
+import { LitElement, css, html, TemplateResult } from 'lit'
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { property } from 'lit/decorators.js'
 import { consume } from '@lit-labs/context';
@@ -33,7 +33,7 @@ export class Table extends ScopedRegistryHost(LitElement) {
   /**
    * Render the caption
    */
-  caption() {
+  caption(): TemplateResult {
     const caption = this.tableStore.caption;
     if (caption && caption != '') {
       return html`<caption>${caption}</caption>`
@@ -44,7 +44,7 @@ export class Table extends ScopedRegistryHost(LitElement) {
   /**
    * Render the <colgroup> and <col>s.
    */
-  colGroup() {
+  colGroup(): TemplateResult {
     const colGroups = this.tableStore.colGroups;
     return html`
     ${renderColGroupStyles(colGroups)}
@@ -59,7 +59,7 @@ export class Table extends ScopedRegistryHost(LitElement) {
   /**
    * Render the heading for column, adding sorting controls if sort function is present
    */
-  heading(fieldDefs: FieldDefinitions<any>, field: string) {
+  heading(fieldDefs: FieldDefinitions<any>, field: string): TemplateResult {
     const heading = fieldDefs[field].heading;
     if (fieldDefs[field] && fieldDefs[field].sort) {
       // decorate with sorting controls
@@ -70,8 +70,12 @@ export class Table extends ScopedRegistryHost(LitElement) {
 
   /**
    * Render the header
+   * TODO: make logic to disable header
+   * TODO: make the into a configurable function like the footer, that way more
+   *   complicated headers with multiple rows of headings that may span colgroups
+   *   can be added.
    */
-  header() {
+  header(): TemplateResult {
     const fieldDefs = this.tableStore.fieldDefs;
     const fields = get(this.tableStore.getFields());
     return html`
@@ -88,7 +92,7 @@ export class Table extends ScopedRegistryHost(LitElement) {
   /**
    * Render a row
    */
-  row(record: any, fields: string[]) {
+  row(record: any, fields: string[]): TemplateResult {
     return html`
     <tr>
       ${map(
@@ -101,7 +105,7 @@ export class Table extends ScopedRegistryHost(LitElement) {
   /**
    * Render the rows in the body.
    */
-  body() {
+  body(): TemplateResult {
     const fields = get(this.tableStore.getFields());
     const records = get(this.tableStore.getRecords());
     return html`
@@ -115,18 +119,16 @@ export class Table extends ScopedRegistryHost(LitElement) {
 
   /**
    * Render the footer.
-   * TODO: need to implement footer template logic.
    */
-  foot() {
-    html`
-    <tfoot>
-    </tfoot>`;
+  foot(): TemplateResult {
+    const footerCells = this.tableStore.footerFunction(get(this.tableStore.getRecords()));
+    return html`<tfoot>${footerCells}</tfoot>`;
   }
 
   /**
    * Renders the table based on current data and table state
    */
-  render() {
+  render(): TemplateResult {
     return html`
     <table>
       ${this.caption()}

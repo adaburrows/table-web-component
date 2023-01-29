@@ -30,12 +30,12 @@
   --table-body-cell-border-style: solid;
   --table-body-cell-border-radius: 0;
 
-  --table-footer-heading-border-width: 0;
+  --table-footer-heading-border-width: 1px 0px 0px 1px;;
   --table-footer-heading-border-color: black;
   --table-footer-heading-border-style: solid;
   --table-footer-heading-border-radius: 0;
 
-  --table-footer-cell-border-width: 0;
+  --table-footer-cell-border-width: 1px 0px 0px 1px;;
   --table-footer-cell-border-color: black;
   --table-footer-cell-border-style: solid;
   --table-footer-cell-border-radius: 0;

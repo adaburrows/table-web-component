@@ -1,3 +1,4 @@
+import { html, TemplateResult } from 'lit';
 import { createContext } from '@lit-labs/context';
 import { FieldDefinition, FieldDefinitions } from "./field-definitions";
 import {
@@ -18,6 +19,7 @@ export interface ColGroup {
 }
 
 export type SortDirection = 'asc' | 'dsc';
+type FooterFunc<T> = (data: T[]) => TemplateResult
 
 /**
  * Allows easily passing in the field definitions and records
@@ -28,7 +30,9 @@ export interface TableStoreProps<T extends {}> {
   caption?: string,
   colGroups?: ColGroup[],
   sortField?: string,
-  sortDirection?: SortDirection
+  sortDirection?: SortDirection,
+  showHeader?: boolean,
+  footerFunction?: FooterFunc<T>
 }
 
 /**
@@ -45,6 +49,7 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
   #_colGroups: Writable<Array<ColGroup>> = writable([]);
   #_sortDirection: Writable<SortDirection> = writable('asc');
   #_sortField: Writable<string> = writable('');
+  #_footerFunction: Writable<FooterFunc<T>> = writable((_: T[]) => html``)
 
   constructor(init: TableStoreProps<T>) {
     super();
@@ -52,8 +57,11 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
     if (init.records) this.#_records.set(init.records);
     if (init.caption) this.#_caption.set(init.caption);
     if (init.colGroups) this.#_colGroups.set(init.colGroups);
-    if (init.sortDirection) this.#_sortDirection.set(init.sortDirection)
+    if (init.sortDirection) this.#_sortDirection.set(init.sortDirection);
     if (init.sortField) this.#_sortField.set(init.sortField);
+    if (init.footerFunction && typeof init.footerFunction == 'function') {
+      this.#_footerFunction.set(init.footerFunction)
+    }
   }
 
   get fieldDefs() {
@@ -106,6 +114,14 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
 
   set sortField(field: string) {
     this.#_sortField.set(field);
+  }
+
+  get footerFunction() {
+    return get(this.#_footerFunction);
+  }
+
+  set footerFunction(ff: FooterFunc<T>) {
+    this.#_footerFunction.set(ff);
   }
 
   /**

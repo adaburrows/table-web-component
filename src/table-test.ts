@@ -74,7 +74,14 @@ const tableProps: TableStoreProps<Example> = {
     {span: 1, class: 'synthetic-group'}
   ],
   sortDirection: 'dsc',
-  sortField: 'age'
+  sortField: 'age',
+  // Set up a table footer that sums the values of the age row and the synthetic age row
+  footerFunction: (data: Example[]) => {
+    const sum1 = data.map((datum) => datum.age).reduce((acc, value) => acc + value, 0);
+    //@ts-ignore
+    const sum2 = data.map((datum) => datum['synth']).reduce((acc, value) => acc + value, 0);
+    return html`<th colspan="3">Totals</th><td>${sum1}</td><td>${sum2}</td><td></td>`;
+  }
 }
 
 /**
