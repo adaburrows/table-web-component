@@ -136,5 +136,26 @@ export class Table extends ScopedRegistryHost(LitElement) {
   }
 
   static styles = css`
+  table {
+    border-width: var(--table-border-width);
+    border-color: var(--table-border-color);
+    border-style: var(--table-border-style);
+    border-collapse: var(--table-border-collapse);
+    border-spacing: var(--table-border-spacing);
+  }
+
+  th {
+    border-width: var(--table-cell-border-width);
+    border-color: var(--table-cell-border-color);
+    border-style: var(--table-cell-border-style);
+    border-radius: var(--table-cell-border-radius);
+  }
+
+  td {
+    border-width: var(--table-cell-border-width);
+    border-color: var(--table-cell-border-color);
+    border-style: var(--table-cell-border-style);
+    border-radius: var(--table-cell-border-radius);
+  }
   `
 }

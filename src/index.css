@@ -8,6 +8,16 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  --table-border-width: 0px 1px 1px 0px;
+  --table-border-color: black;
+  --table-border-style: solid;
+  --table-border-collapse: separate;
+  --table-border-spacing: 0px 0px;
+  --table-cell-border-width: 1px 0px 0px 1px;
+  --table-cell-border-color: black;
+  --table-cell-border-style: solid;
+  --table-cell-border-radius: 0;
 }
 
 a {
