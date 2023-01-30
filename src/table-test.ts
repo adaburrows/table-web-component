@@ -59,7 +59,7 @@ const fieldDefs: FieldDefinitions<Example> = {
   'decorated-synth': new FieldDefinition<Example>({
     heading: 'Decorated Synthetic Field',
     synthesizer: (data: Example) => [data.id, data.name, data.age],
-    decorator: (field: any) => html`<ul>${map(field, (i) => html`<li>${i}</li>`)}</ul>`
+    decorator: (field: any) => html`<ul>${map(field, (i) => html`<li><button>${i}</button></li>`)}</ul>`
   })
 }
 
@@ -68,7 +68,7 @@ const tableProps: TableStoreProps<Example> = {
   records: [],
   caption: "Howdy! This is a table caption.",
   colGroups: [
-    {}, // empty for ID column
+    {span: 1, class: 'id-group'},
     {span: 2, class: 'descriptive-group'},
     {span: 2, class: 'numeric-group'},
     {span: 1, class: 'synthetic-group'}
@@ -80,7 +80,7 @@ const tableProps: TableStoreProps<Example> = {
     const sum1 = data.map((datum) => datum.age).reduce((acc, value) => acc + value, 0);
     //@ts-ignore
     const sum2 = data.map((datum) => datum['synth']).reduce((acc, value) => acc + value, 0);
-    return html`<th colspan="3">Totals</th><td>${sum1}</td><td>${sum2}</td><td></td>`;
+    return html`<th colspan="3">Totals</th><td class="age">${sum1}</td><td class="synth">${sum2}</td><td></td>`;
   }
 }
 

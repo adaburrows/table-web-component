@@ -7,7 +7,7 @@ import { get } from 'svelte/store';
 import { StoreSubscriber } from 'lit-svelte-stores';
 import { FieldDefinitions } from './field-definitions';
 import { TableStore, TableStoreContext } from './table-store';
-import { renderColGroupStyles } from './table-colgroup-style-directive';
+import { renderTableStyles } from './table-style-directive';
 
 /**
  * Table component that supports creating synthetic fields, decorating fields
@@ -47,7 +47,6 @@ export class Table extends ScopedRegistryHost(LitElement) {
   colGroup(): TemplateResult {
     const colGroups = this.tableStore.colGroups;
     return html`
-    ${renderColGroupStyles(colGroups)}
     <colgroup>
       ${map(
         colGroups,
@@ -65,7 +64,7 @@ export class Table extends ScopedRegistryHost(LitElement) {
       // decorate with sorting controls
       console.log('should wrap in sorting control')
     }
-    return html`<th>${heading}</th>`
+    return html`<th class="${field}">${heading}</th>`
   }
 
   /**
@@ -97,7 +96,7 @@ export class Table extends ScopedRegistryHost(LitElement) {
     <tr>
       ${map(
         fields,
-        (field) => html`<td>${this.tableStore.decorateField(field, record[field])}</td>`
+        (field) => html`<td class="${field}">${this.tableStore.decorateField(field, record[field])}</td>`
       )}
     </tr>`;
   }
@@ -131,6 +130,7 @@ export class Table extends ScopedRegistryHost(LitElement) {
   render(): TemplateResult {
     return html`
     <table>
+      ${renderTableStyles(this.tableStore)}
       ${this.caption()}
       ${this.colGroup()}
       ${this.header()}
@@ -139,13 +139,48 @@ export class Table extends ScopedRegistryHost(LitElement) {
     </table>`;
   }
 
+  /**
+   * Styles that don't change per component instance
+   */
   static styles = css`
   table {
+    background-color: var(--table-background-color);
+    width: var(--table-width);
+    max-width: var(--table-max-width);
+    height: var(--table-height);
+    max-height: var(--table-max-height);
+    margin: var(--table-margin);
+    display: var(--table-display);
+    overflow-x: var(--table-overflow-x);
+    overflow-y: var(--table-overflow-y);
     border-width: var(--table-border-width);
     border-color: var(--table-border-color);
     border-style: var(--table-border-style);
     border-collapse: var(--table-border-collapse);
     border-spacing: var(--table-border-spacing);
+  }
+
+  caption {
+    caption-side: var(--table-caption-side);
+    text-align: var(--table-caption-align);
+    margin: var(--table-caption-margin);
+    padding: var(--table-caption-padding);
+  }
+
+  th, td {
+    padding: var(--table-element-padding);
+  }
+
+  thead {
+    position: var(--table-header-position);
+    top: var(--table-header-top);
+  }
+
+  thead th:first-child {
+    border-width: var(--table-header-first-heading-border-width);
+    border-color: var(--table-header-first-heading-border-color);
+    border-style: var(--table-header-first-heading-border-style);
+    border-radius: var(--table-header-first-heading-border-radius);
   }
 
   thead th {
@@ -155,6 +190,13 @@ export class Table extends ScopedRegistryHost(LitElement) {
     border-radius: var(--table-header-heading-border-radius);
   }
 
+  thead th:last-child {
+    border-width: var(--table-header-last-heading-border-width);
+    border-color: var(--table-header-last-heading-border-color);
+    border-style: var(--table-header-last-heading-border-style);
+    border-radius: var(--table-header-last-heading-border-radius);
+  }
+
   tbody th {
     border-width: var(--table-body-heading-border-width);
     border-color: var(--table-body-heading-border-color);
@@ -162,11 +204,32 @@ export class Table extends ScopedRegistryHost(LitElement) {
     border-radius: var(--table-body-heading-border-radius);
   }
 
+  tbody th:first-child {
+    border-width: var(--table-body-first-heading-border-width);
+    border-color: var(--table-body-first-heading-border-color);
+    border-style: var(--table-body-first-heading-border-style);
+    border-radius: var(--table-body-first-heading-border-radius);
+  }
+
+  tbody td:first-child {
+    border-width: var(--table-body-first-cell-border-width);
+    border-color: var(--table-body-first-cell-border-color);
+    border-style: var(--table-body-first-cell-border-style);
+    border-radius: var(--table-body-first-cell-border-radius);
+  }
+
   tbody td {
     border-width: var(--table-body-cell-border-width);
     border-color: var(--table-body-cell-border-color);
     border-style: var(--table-body-cell-border-style);
     border-radius: var(--table-body-cell-border-radius);
+  }
+
+  tbody td:last-child {
+    border-width: var(--table-body-last-cell-border-width);
+    border-color: var(--table-body-last-cell-border-color);
+    border-style: var(--table-body-last-cell-border-style);
+    border-radius: var(--table-body-last-cell-border-radius);
   }
 
   tfoot th {
@@ -181,5 +244,14 @@ export class Table extends ScopedRegistryHost(LitElement) {
     border-color: var(--table-footer-cell-border-color);
     border-style: var(--table-footer-cell-border-style);
     border-radius: var(--table-footer-cell-border-radius);
-  }`
+  }
+
+  tr:nth-child(even) td {
+    background-color: var(--table-row-even-background-color);
+  }
+
+  tr:nth-child(odd) td {
+      background-color: --table-row-odd-background-color;
+  }
+  `
 }
