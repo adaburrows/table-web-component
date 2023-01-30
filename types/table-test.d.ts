@@ -1,26 +1,37 @@
 import { LitElement } from 'lit';
-import { AdaburrowsTable } from './adaburrows-table';
-declare const TestTable_base: typeof LitElement & import("@open-wc/dedupe-mixin").Constructor<import("@open-wc/scoped-elements").ScopedElementsHost> & typeof import("@open-wc/scoped-elements").ScopedElementsHost;
+import { TableContext } from './table-context-element';
+import { TableStore } from './table-store';
+import { Table } from './table';
 /**
- * An example element.
- *
- * @slot - This element has a slot
- * @csspart button - The button
+ * Here's our data schema
  */
-export declare class TestTable extends TestTable_base {
-    stuff: {
-        greeting: string;
-        subject: string;
+type Example = {
+    id: string;
+    name: string;
+    description: string;
+    age: number;
+};
+declare const TableTest_base: typeof LitElement;
+/**
+ * Component to test the component. Uses the ScopedRegistryHost mixin. None of
+ * these components should be in the global web component registry.
+ */
+export declare class TableTest extends TableTest_base {
+    static elementDefinitions: {
+        'adaburrows-table-context': typeof TableContext;
+        'adaburrows-table': typeof Table;
     };
+    tableStore: TableStore<Example>;
+    constructor();
+    /**
+     * Demo showing how to update the table rows with the store's setter.
+     */
+    newRows(): void;
     render(): import("lit-html").TemplateResult<1>;
-    static styles: import("lit").CSSResult;
-    static get scopedElements(): {
-        'adaburrows-table': typeof AdaburrowsTable;
-    };
 }
 declare global {
     interface HTMLElementTagNameMap {
-        'test-table': TestTable;
+        'table-test': TableTest;
     }
 }
 export {};

@@ -9,9 +9,11 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
+  background-color: rgb(169, 151, 151);
+
   /* Table styles */
 
-  --table-background-color: white;
+  --table-background-color: ;
   --table-width: 100%;
   --table-max-width: 1200px;
   --table-height: 600px;
@@ -90,7 +92,7 @@
   --id-group-color: rgb(159, 126, 126);
   --descriptive-group-color: rgb(241, 120, 140);
   --numeric-group-color: rgb(241, 120, 201);
-  --synthetic-group-color: rgb(241, 164, 120);
+  --synthetic-group-color: rgb(241, 150, 120);
 
   --id-border-style: solid;
   --name-border-style: solid dotted solid solid;
@@ -98,6 +100,7 @@
   --age-border-style: solid dotted solid solid;
   --synth-border-style: solid;
 
+  --id-background-color: rgb(159, 126, 126);
   --name-background-color: rgb(241, 120, 140);
   --description-background-color: rgb(241, 120, 140);
   --age-background-color: rgb(241, 120, 201);
@@ -126,18 +129,9 @@
 
   --id-min-width: 3em;
   --id-max-width: 3em;
-  --name-min-width: 15em;
-  --description-min-width: 30em;
-  --age-min-width: 3em;
-  --synth-min-width: 3em;
-  --decorated-min-syth-width: 40em;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  --name-min-width: 16em;
+  --description-min-width: 22em;
+  --age-min-width: 10em;
+  --synth-min-width: 10em;
+  --decorated-synth-min-width: 20em;
 }

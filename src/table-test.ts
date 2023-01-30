@@ -1,11 +1,11 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
+import { map } from 'lit/directives/map.js';
 import { TableContext } from './table-context-element';
 import { TableStore, TableStoreProps } from './table-store';
 import { Table } from './table';
-import { FieldDefinitions, FieldDefinition } from './field-definitions';
-import { map } from 'lit/directives/map.js';
+import { FieldDefinitions, FieldDefinition, numeric, lexicographic } from './field-definitions';
 
 /**
  * Here's our data schema
@@ -17,6 +17,45 @@ type Example = {
   age: number
 }
 
+const Names = [
+  'Xochitl',
+  'Jill',
+  'Jack',
+  'Sky',
+  'Patrick',
+  'Paul',
+  'Eric',
+  'Adrian',
+  'Cuauhtlatoatzin',
+  'Paachi',
+  'Pote',
+  'Mata',
+  'Saul',
+  'Maria',
+  'Margarita',
+  'Tiffany',
+  'Shelly',
+  'Spot',
+  'Marcus',
+  'Terry',
+  'Nathaniel',
+  'David',
+  'Patrick',
+  'Siddharth',
+  'Manuel',
+  'Hadrian',
+  'Plato',
+  'Erebus',
+  'Socrates',
+  'Arturo',
+  'James',
+  'Tiago',
+  'Andrew',
+  'John',
+  'Michelle',
+  'Danny'
+]
+
 /**
  * Generate a random set of rows
  */
@@ -25,7 +64,7 @@ function generateRows(): Example[] {
   for(let i = 0; i < 10; i++) {
     rows.push({
       'id': "" + Math.ceil(Math.random() * 3000),
-      'name': btoa("" + Math.random() * 300000000000),
+      'name': Names[Math.ceil(Math.random() * 35)],
       'description': btoa("" + Math.random() * 300000000000),
       'age': Math.floor(Math.random() * 120)
     });
@@ -42,12 +81,17 @@ function generateRows(): Example[] {
  */
 const fieldDefs: FieldDefinitions<Example> = {
   'id': new FieldDefinition<Example>({heading: 'ID'}),
-  'name': new FieldDefinition<Example>({heading: 'Name'}),
-  'description': new FieldDefinition<Example>({heading: 'Desc.'}),
-  'age': new FieldDefinition<Example>({
-    heading: 'Age (in months)',
-    sort: (a: number, b: number) => a - b
+  'name': new FieldDefinition<Example>({
+    heading: 'Name',
+    sort: lexicographic
   }),
+  'description': new FieldDefinition<Example>({heading: 'Desc.'}),
+  // Demonstrate a sortable column
+  'age': new FieldDefinition<Example>({
+    heading: 'Age',
+    sort: numeric
+  }),
+  // Synthesize a field that doesn't exist on the original data, from the orignal data
   'synth': new FieldDefinition<Example>({
     heading: 'Age + 12',
     synthesizer: (data: Example) => data.age + 12
@@ -63,18 +107,26 @@ const fieldDefs: FieldDefinitions<Example> = {
   })
 }
 
+/**
+ * Set up an example table
+ */
 const tableProps: TableStoreProps<Example> = {
   fieldDefs,
+  // Start the table empty
   records: [],
   caption: "Howdy! This is a table caption.",
+  // These are used for coloring the column groups
   colGroups: [
     {span: 1, class: 'id-group'},
     {span: 2, class: 'descriptive-group'},
     {span: 2, class: 'numeric-group'},
     {span: 1, class: 'synthetic-group'}
   ],
+  // Set the table up sorted
   sortDirection: 'dsc',
-  sortField: 'age',
+  sortField: 'name',
+  // Show the header, some usages may not require headings
+  showHeader: true,
   // Set up a table footer that sums the values of the age row and the synthetic age row
   footerFunction: (data: Example[]) => {
     const sum1 = data.map((datum) => datum.age).reduce((acc, value) => acc + value, 0);
@@ -116,12 +168,20 @@ export class TableTest extends ScopedRegistryHost(LitElement) {
     return html`
       <button @click=${this.newRows}>New Rows</button>
       <adaburrows-table .tableStore=${this.tableStore}></adaburrows-table>
-      <hr>
+
+      <!-- Use the context to bypass passing props through arbitrary nesting -->
+      <!--
       <adaburrows-table-context .store=${this.tableStore}>
-        <adaburrows-table></adaburrows-table>
+        <div>
+          <div>
+            <adaburrows-table></adaburrows-table>
+          </div>
+        </div>
       </adaburrows-table-context>
+      -->
     `
   }
+
 }
 
 declare global {

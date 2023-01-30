@@ -56,36 +56,94 @@ export class Table extends ScopedRegistryHost(LitElement) {
   }
 
   /**
-   * Render the heading for column, adding sorting controls if sort function is present
+   * Render sorting indicators according to state
    */
-  heading(fieldDefs: FieldDefinitions<any>, field: string): TemplateResult {
-    const heading = fieldDefs[field].heading;
-    if (fieldDefs[field] && fieldDefs[field].sort) {
-      // decorate with sorting controls
-      console.log('should wrap in sorting control')
+  sortIndicator(fieldDefs: FieldDefinitions<any>, field: string) {
+    const sortDirection = this.tableStore.sortDirection;
+    const sortFragment = html`
+    <svg style="display: inline; width:24px; height: 24px; transform: scale(0.6) translate(0%, +50%);">
+      <use xlink:href="/all.svg#gg-select"/>
+    </svg>`;
+    if (fieldDefs[field].sort) {
+      if (field == this.tableStore.sortField) {
+        switch (sortDirection) {
+          case 'na':
+            break;
+          case 'asc':
+            return html`
+            <svg style="display: inline; width:24px; height: 24px; transform: scale(0.6) translate(0%, +50%);">
+              <use xlink:href="/all.svg#gg-chevron-up"/>
+            </svg>`;
+          case 'dsc':
+            return html`
+            <svg style="display: inline; width:24px; height: 24px; transform: scale(0.6) translate(0%, +50%);">
+              <use xlink:href="/all.svg#gg-chevron-down"/>
+            </svg>`;
+        }
+      }
+      return sortFragment;
     }
-    return html`<th class="${field}">${heading}</th>`
+    return html``;
+  }
+
+  /**
+   * 
+   */
+  headerHandler(field: string) {
+    return () => {
+      if (this.tableStore.sortField == field) {
+        if (this.tableStore.sortDirection == 'asc') {
+          this.tableStore.sortDirection = 'dsc';
+        } else if (this.tableStore.sortDirection == 'dsc') {
+          this.tableStore.sortDirection = 'na';
+          this.tableStore.sortField = '';
+        }
+      } else {
+        this.tableStore.sortField = field;
+        this.tableStore.sortDirection = 'asc';
+      }
+    }
+  }
+
+  /**
+   * Render the heading for column, adding sorting controls if sort function is present
+   *
+   * Table behavior:
+   * - clicking on sortable headings are stateful
+   * - if new column selection, reset to 'asc' sort and set sortField
+   * - if same column selected again, change to 'dsc'
+   * - if same column selected thrice, change to 'na' and remove sortField
+   */
+  heading(field: string): TemplateResult {
+    const fieldDefs = this.tableStore.fieldDefs;
+    const heading = fieldDefs[field].heading;
+    return html`
+    <th @click=${this.headerHandler(field)} class="${field}">
+      ${heading}
+      ${this.sortIndicator(fieldDefs, field)}
+    </th>`
   }
 
   /**
    * Render the header
-   * TODO: make logic to disable header
-   * TODO: make the into a configurable function like the footer, that way more
+   * TODO: make this header into a configurable function like the footer, that way more
    *   complicated headers with multiple rows of headings that may span colgroups
    *   can be added.
    */
   header(): TemplateResult {
-    const fieldDefs = this.tableStore.fieldDefs;
-    const fields = get(this.tableStore.getFields());
-    return html`
-    <thead>
-      <tr>
-        ${map(
-          fields,
-          (field) => this.heading(fieldDefs, field)
-        )}
-      </tr>
-    </thead>`;
+    if (this.tableStore.showHeader) {
+      const fields = get(this.tableStore.getFields());
+      return html`
+      <thead>
+        <tr>
+          ${map(
+            fields,
+            (field) => this.heading(field)
+          )}
+        </tr>
+      </thead>`
+    }
+    return html``;
   }
 
   /**
@@ -142,7 +200,9 @@ export class Table extends ScopedRegistryHost(LitElement) {
   /**
    * Styles that don't change per component instance
    */
-  static styles = css`
+  static styles = [
+    css`
+
   table {
     background-color: var(--table-background-color);
     width: var(--table-width);
@@ -253,5 +313,5 @@ export class Table extends ScopedRegistryHost(LitElement) {
   tr:nth-child(odd) td {
       background-color: --table-row-odd-background-color;
   }
-  `
+  `];
 }

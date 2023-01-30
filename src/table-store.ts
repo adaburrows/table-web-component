@@ -18,7 +18,7 @@ export interface ColGroup {
   class?: string
 }
 
-export type SortDirection = 'asc' | 'dsc';
+export type SortDirection = 'asc' | 'dsc' | 'na';
 type FooterFunc<T> = (data: T[]) => TemplateResult
 
 /**
@@ -47,8 +47,9 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
   #_records: Writable<Array<T>> = writable([]);
   #_caption: Writable<string | undefined> = writable(undefined);
   #_colGroups: Writable<Array<ColGroup>> = writable([]);
-  #_sortDirection: Writable<SortDirection> = writable('asc');
+  #_sortDirection: Writable<SortDirection> = writable('na');
   #_sortField: Writable<string> = writable('');
+  #_showHeader: Writable<boolean> = writable(false);
   #_footerFunction: Writable<FooterFunc<T>> = writable((_: T[]) => html``)
 
   constructor(init: TableStoreProps<T>) {
@@ -59,6 +60,7 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
     if (init.colGroups) this.#_colGroups.set(init.colGroups);
     if (init.sortDirection) this.#_sortDirection.set(init.sortDirection);
     if (init.sortField) this.#_sortField.set(init.sortField);
+    if (init.showHeader) this.#_showHeader.set(init.showHeader);
     if (init.footerFunction && typeof init.footerFunction == 'function') {
       this.#_footerFunction.set(init.footerFunction)
     }
@@ -106,6 +108,7 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
 
   set sortDirection(direction: SortDirection) {
     this.#_sortDirection.set(direction);
+    this.set();
   }
 
   get sortField() {
@@ -114,6 +117,16 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
 
   set sortField(field: string) {
     this.#_sortField.set(field);
+    this.set();
+  }
+
+  get showHeader() {
+    return get(this.#_showHeader);
+  }
+
+  set showHeader(sh: boolean) {
+    this.#_showHeader.set(sh);
+    this.set();
   }
 
   get footerFunction() {
@@ -122,6 +135,7 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
 
   set footerFunction(ff: FooterFunc<T>) {
     this.#_footerFunction.set(ff);
+    this.set();
   }
 
   /**
@@ -168,17 +182,10 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
       && this.fieldDefs[this.sortField].sort
     ) {
       const sort = this.fieldDefs[this.sortField].sort;
-      const sign = this.sortDirection == 'dsc' ? -1 : 1;
-      return (a: T, b: T) => {
-        if (this.sortField in a && this.sortField in b) {
-          // @ts-ignore
-          return sign * sort(a[this.sortField], b[this.sortField]);
-        }
-        // No sorting field, leave out of order
-        return 0;
-      }
+      // @ts-ignore
+      return (a: T, b: T) => sort(a[this.sortField], b[this.sortField])
     } else {
-      return undefined;
+      return (_a: T, _b: T) => 0;
     }
   }
 
@@ -186,9 +193,18 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
    * Sorts rows after fields are synthesized
    */
   sort(originalRecords: T[]): T[] {
-    const records = originalRecords;
-    if (this.sortField != '') {
-      return records.sort(this.getSortingFunction());
+    const records = [...originalRecords];
+    if (
+      this.sortDirection != 'na'
+      && this.sortField != ''
+      && this.fieldDefs[this.sortField]
+      && this.fieldDefs[this.sortField].sort
+    ) {
+      const ascending = records.sort(this.getSortingFunction());
+      if (this.sortDirection === 'dsc') {
+        return ascending.reverse();
+      }
+      return ascending;
     }
     return records;
   }
