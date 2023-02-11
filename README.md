@@ -177,6 +177,10 @@ const fieldDefs: FieldDefinitions<Example> = {
 };
 ```
 
+#### Writing your own sorting functions
+
+Since the sorting function is the built-in array sorting function, [the documents for that apply here as well](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#description).
+
 ### Decorating fields
 
 Fields can be wrapped in HTML and/or other components in order to build very complex tables. Need to wrap a field in an image, or show a link to edit a particular object from the id? Easy:
