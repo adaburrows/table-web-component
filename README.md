@@ -289,20 +289,28 @@ export interface FieldDefinitionProps<T> {
 export interface TableStoreProps<T extends {}> {
   // The table ID used for CSS variables and HTML id
   tableId: string
+
   // The field definitions
   fieldDefs?: FieldDefinitions<T>
+
   // The records
   records?: T[]
+
   // The table caption as a string
   caption?: string
+
   // The set of column groups as decribed above
   colGroups?: ColGroup[]
+
   // Initial sorting field
   sortField?: string
+
   // Initial direction of the sort used if an initial sort field is set
   sortDirection?: SortDirection
+
   // Show the header, or hide the header
   showHeader?: boolean
+
   // Function passed the whole set of records that returns the footer HTML
   footerFunction?: FooterFunc<T>
 }
@@ -313,6 +321,8 @@ export interface TableStoreProps<T extends {}> {
 The system of variables has been designed for simplicity and reasonable defaults. While it does allow keeping things simple, it does have a lot of flexibility in configuration. One can make configuring the table as complicated as the want. Or, one can just keep it simple.
 
 The whole table can have a border around it, or not. The whole table can be given a background color. Each column can be styled independently. Each column group can be given a background color. Odd and even rows can be given different background colors, and specific columns of odd and even rows can be given particular background colors.
+
+To see the gory details of how all of this is put together, see the [table-style-directive.ts](https://github.com/adaburrows/table-web-component/blob/main/src/table-style-directive.ts). Or, to ease into it all, follow along. There's probably too much to take in at once anyways.
 
 ### First things first
 
