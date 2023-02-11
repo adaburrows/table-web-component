@@ -1,13 +1,14 @@
 {
-  "name": "@adaburrows/table-web-component",
+  "name": "@adaburrows/table",
+  "description": "A very flexible table written as a Lit-based web component.",
   "version": "0.5.0",
   "type": "module",
-  "module": "dist/table-web-component.js",
+  "module": "dist/index.js",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "types": "./types/index.d.ts",
-      "import": "./dist/table-web-component.js"
+      "import": "./dist/index.js"
     },
     "./table": {
       "types": "./types/table.d.ts",
