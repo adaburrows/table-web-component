@@ -149,8 +149,7 @@ export class TableTest extends ScopedRegistryHost(LitElement) {
         //@ts-ignore
         const sum2 = data.map((datum) => datum['synth']).reduce((acc, value) => acc + value, 0);
         return html`<th colspan="3">Totals</th><td class="age">${sum1}</td><td class="synth">${sum2}</td><td></td>`;
-      },
-      oddEvenColors: true
+      }
     });
   }
 

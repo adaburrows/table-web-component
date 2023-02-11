@@ -34,7 +34,6 @@ export interface TableStoreProps<T extends {}> {
   sortDirection?: SortDirection
   showHeader?: boolean
   footerFunction?: FooterFunc<T>
-  oddEvenColors?: boolean
 }
 
 /**

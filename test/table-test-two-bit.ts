@@ -1,17 +1,16 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { TableContext } from '../src/table-context-element';
+import { FieldDefinitions, FieldDefinition} from '../src/field-definitions';
 import { TableStore } from '../src/table-store';
 import { Table } from '../src/table';
-import { FieldDefinitions, FieldDefinition} from '../src/field-definitions';
 
 /**
  * Here's our data schema
  */
 type TwoBits = {
-  'b1': boolean,
-  'b0': boolean
+  'b1': number,
+  'b0': number
 }
 
 /**
@@ -29,12 +28,12 @@ const fieldDefs: FieldDefinitions<TwoBits> = {
 @customElement('table-test-two-bit')
 export class TableTestTwoBit extends ScopedRegistryHost(LitElement) {
   static elementDefinitions = {
-    'adaburrows-table-context': TableContext,
-    'adaburrows-table': Table,
+    'adaburrows-table': Table
   }
 
-  // This means this component not will rerender, but lit-svelte-stores
-  // should cause a requestUpdate() in the component
+  // This means this component we are building will not rerender, but the Table's
+  // lit-svelte-stores controller should cause a requestUpdate() call by the
+  // component
   tableStore: TableStore<TwoBits>
 
   constructor() {
@@ -44,10 +43,10 @@ export class TableTestTwoBit extends ScopedRegistryHost(LitElement) {
       tableId: 'two-bit',
       fieldDefs,
       records: [
-        { 'b1': false, 'b0': false },
-        { 'b1': false, 'b0': true  },
-        { 'b1': true,  'b0': false },
-        { 'b1': true,  'b0': true  },
+        { 'b1': 0, 'b0': 0 },
+        { 'b1': 0, 'b0': 1 },
+        { 'b1': 1, 'b0': 0 },
+        { 'b1': 1, 'b0': 1 },
       ],
       caption: "2-bit truth table",
       // Show the header, some usages may not require headings

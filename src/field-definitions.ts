@@ -3,14 +3,14 @@ import { TemplateResult } from "lit";
 /**
  * Function types
  */
-type SynthesizerFunc<T> = (data: T) => any;
-type DecoratorFunc = (field: any) => TemplateResult;
-type SortFunc = (a: any, b: any) => number;
+export type SynthesizerFunc<T> = (data: T) => any;
+export type DecoratorFunc = (field: any) => TemplateResult;
+export type SortFunc = (a: any, b: any) => number;
 
 /**
  * Convenience object for passing params
  */
-interface FieldDefinitionProps<T> {
+export interface FieldDefinitionProps<T> {
   heading: string | TemplateResult;
   synthesizer?: SynthesizerFunc<T>;
   decorator?: DecoratorFunc;

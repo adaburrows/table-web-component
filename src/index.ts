@@ -1,3 +1,7 @@
+export { FieldDefinition, lexicographic, numeric } from './field-definitions'
+export type { FieldDefinitions } from './field-definitions'
+export { TableStore, TableStoreContext } from './table-store'
+
 import { TableContext } from './table-context-element'
 import { Table } from './table'
 
