@@ -225,7 +225,7 @@ const fieldDefs: FieldDefinitions<Example> = {
 
 ### Defining a footer
 
-This component also lets one define a footer template which get the full set of records so one can compute sums, etc. of the various colums to summarize the table. Unfortunately, this is probably the least polished part of the table, but suggestions are welcome. However, here's an example of one passed into the `TableTest` example:
+This component also lets one define a footer template which get the full set of records post field synthesis so one can compute sums, etc. of the various colums to summarize the table including the synthesized fields. Unfortunately, this is probably the least polished part of the table, but suggestions are welcome. However, here's an example of one passed into the `TableTest` example:
 
 ```ts
   constructor() {
