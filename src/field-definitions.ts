@@ -11,7 +11,7 @@ type SortFunc = (a: any, b: any) => number;
  * Convenience object for passing params
  */
 interface FieldDefinitionProps<T> {
-  heading: string;
+  heading: string | TemplateResult;
   synthesizer?: SynthesizerFunc<T>;
   decorator?: DecoratorFunc;
   sort?: SortFunc;
@@ -21,7 +21,7 @@ interface FieldDefinitionProps<T> {
  * Defines the required data for a column
  */
 export class FieldDefinition<T extends object> implements FieldDefinitionProps<T> {
-  heading: string = '';
+  heading: string | TemplateResult = '';
   synthesizer?: SynthesizerFunc<T>;
   decorator?: DecoratorFunc;
   sort?: SortFunc;

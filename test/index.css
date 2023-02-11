@@ -1,0 +1,295 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  background-color: var(--color-coal);
+
+  /* ================ */
+  /* COMMON VARIABLES */
+  /* ================ */
+  
+  --color-white: rgb(255, 255, 255);
+  --color-black: rgb(0, 0, 0);
+  --color-coal: rgb(51, 51, 51);
+  --color-grey: rgb(126, 126, 126);
+  --color-lt-grey: rgb(151, 151, 151);
+
+  --color-salmon: rgb(255, 126, 126);
+  --color-orange: rgb(255, 158, 56); /* original (241, 150, 120); */
+  --color-yellow: rgb(195, 219, 0);
+  --color-green: rgb(0, 157, 10);
+  --color-lt-green: rgb(0, 220, 118);
+  --color-seafoam: rgb(0, 255, 190);
+  --color-teal: rgb(0, 179, 190);
+  --color-cyan: rgb(0, 220, 245);
+  --color-lt-blue: rgb(92, 130, 255);
+  --color-blue: rgb(56, 60, 255);
+  --color-lavender-bg: rgb(139, 148, 245);
+  --color-violet: rgb(138, 88, 255);
+  --color-lt-violet: rgb(229, 148, 245); /* original fushia (241, 120, 201); */
+  --color-fushia: rgb(255, 130, 255);
+  --color-pink: rgb(255, 130, 190);
+  --color-rose: rgb(255, 103, 147);
+  --color-red-rose: rgb(220, 51, 79);
+  --color-transparent-white: rgba(255,255,255,0.3);
+
+  --border-none: 0;
+
+  --border-1px: 1px;
+  --border-1px-top: 1px 0px 0px 0px;
+  --border-1px-right: 0px 1px 0px 0px;
+  --border-1px-bottom: 0px 0px 1px 0px;
+  --border-1px-left: 0px 0px 0px 1px;
+  --border-1px-right-bottom: 0px 1px 1px 0px;
+  --border-1px-right-bottom-left: 0px 1px 1px 1px;
+
+  --border-heading-first: 1px 1px 2px 1px;
+  --border-heading-rest: 1px 1px 2px 0px;
+
+  --border-color: black; /* This could easily be from a pallette of colours. */
+  --border-solid: solid;
+  --border-solid-with-dotted-right: solid dotted solid solid;
+
+  /* =================== */
+  /* FULL EXAMPLE STYLES */
+  /* =================== */
+
+  /* Top level table styles */
+  --table-full-example-width: 100%;
+  --table-full-example-max-width: 1300px;
+  --table-full-example-height: 600px;
+  --table-full-example-max-height: 600px;
+  --table-full-example-margin: 0 auto;
+  --table-full-example-display: block;
+  --table-full-example-overflow-x: scroll;
+  --table-full-example-overflow-y: scroll;
+  --table-full-example-border-width: var(--border-none);
+  --table-full-example-border-color: var(--border-color);
+  --table-full-example-border-style: var(--border-solid);
+  --table-full-example-border-collapse: separate; /* must be 'separate' for sticky header to work */
+  --table-full-example-border-spacing: 0px 0px;
+
+  /* Caption positioning */
+  --table-full-example-caption-side: top;
+  --table-full-example-caption-align: left;
+
+  /* Heading style */
+  --table-full-example-header-position: sticky; /* keep the header stuck to the top of the table while scrolling */
+  --table-full-example-header-top: 0;
+
+  /* Cell padding (shared in all body elements) */
+  --table-full-example-element-padding: 0.6em 1em;
+
+  /* Header: First column */
+  --table-full-example-header-first-heading-border-width: var(--border-heading-first);
+  --table-full-example-header-first-heading-border-color: var(--border-color);
+  --table-full-example-header-first-heading-border-style: var(--border-solid);
+  --table-full-example-header-first-heading-border-radius: 0;
+
+  /* Header: Neither first no last columns */
+  --table-full-example-header-heading-border-width: var(--border-heading-rest);
+  --table-full-example-header-heading-border-color: var(--table-full-example-header-first-heading-border-color);
+  --table-full-example-header-heading-border-style: var(--table-full-example-header-first-heading-border-style);
+  --table-full-example-header-heading-border-radius: var(--table-full-example-header-first-heading-border-radius);
+
+  /* Header: Last column */
+  --table-full-example-header-last-heading-border-width: var(--table-full-example-header-heading-border-width);
+  --table-full-example-header-last-heading-border-color: var(--table-full-example-header-heading-border-color);
+  --table-full-example-header-last-heading-border-style: var(--table-full-example-header-heading-border-style);
+  --table-full-example-header-last-heading-border-radius: var(--table-full-example-header-heading-border-radius);
+
+  /* This applies to <th> elements in the body */
+  --table-full-example-body-heading-border-width: var(--border-none);
+  --table-full-example-body-heading-border-color: var(--border-color);
+  --table-full-example-body-heading-border-style: var(--border-solid);
+  --table-full-example-body-heading-border-radius: 0;
+
+  /* Body: First column */
+  --table-full-example-body-first-cell-border-width: var(--border-1px-right-bottom-left);
+  --table-full-example-body-first-cell-border-color: var(--border-color);
+  --table-full-example-body-first-cell-border-style: var(--border-solid);
+  --table-full-example-body-first-cell-border-radius: 0;
+
+  /* Body: Neither first no last columns */
+  --table-full-example-body-cell-border-width: var(--border-1px-right-bottom);
+  --table-full-example-body-cell-border-color: var(--border-color);
+  --table-full-example-body-cell-border-style: var(--border-solid);
+  --table-full-example-body-cell-border-radius: 0;
+
+  /* Body: Last column */
+  --table-full-example-body-last-cell-border-width: var(--border-1px-right-bottom);
+  --table-full-example-body-last-cell-border-color: var(--border-color);
+  --table-full-example-body-last-cell-border-style: var(--border-solid);
+  --table-full-example-body-last-cell-border-radius: 0;
+
+  /* Footer headings */
+  --table-full-example-footer-heading-border-width: var(--border-1px-right-bottom-left);
+  --table-full-example-footer-heading-border-color: var(--border-color);
+  --table-full-example-footer-heading-border-style: var(--border-solid);
+  --table-full-example-footer-heading-border-radius: 0;
+
+  /* Footer cells */
+  --table-full-example-footer-cell-border-width: var(--border-1px-right-bottom);
+  --table-full-example-footer-cell-border-color: var(--border-color);
+  --table-full-example-footer-cell-border-style: var(--border-solid);
+  --table-full-example-footer-cell-border-radius: 0;
+
+  /* Colgroup background colors */
+  --table-full-example-id-group-color: var(--color-violet);
+  --table-full-example-descriptive-group-color: var(--color-rose);
+  --table-full-example-numeric-group-color: var(--color-teal);
+  --table-full-example-synthetic-group-color: var(--color-orange);
+
+  /* Per field styles */
+  --table-full-example-id-heading-text-align: center;
+  --table-full-example-id-heading-vertical-align: bottom;
+  --table-full-example-id-border-style: var(--border-solid);
+  --table-full-example-id-background-color: var(--color-violet);
+  --table-full-example-id-cell-text-align: center;
+  --table-full-example-id-min-width: 3em;
+  --table-full-example-id-max-width: 3em;
+
+  --table-full-example-name-heading-text-align: left;
+  --table-full-example-name-heading-vertical-align: bottom;
+  --table-full-example-name-border-style: var(--border-solid-with-dotted-right);
+  --table-full-example-name-background-color: var(--color-rose);
+  --table-full-example-name-cell-text-align: left;
+  --table-full-example-name-min-width: 16em;
+
+  --table-full-example-description-heading-text-align: left;
+  --table-full-example-description-heading-vertical-align: bottom;
+  --table-full-example-description-border-style: var(--border-solid);
+  --table-full-example-description-background-color: var(--color-rose);
+  --table-full-example-description-cell-text-align: left;
+  --table-full-example-description-min-width: 22em;
+
+  --table-full-example-age-heading-text-align: center;
+  --table-full-example-age-heading-vertical-align: bottom;
+  --table-full-example-age-border-style: var(--border-solid-with-dotted-right);
+  --table-full-example-age-background-color: var(--color-teal);
+  --table-full-example-age-cell-text-align: center;
+  --table-full-example-age-min-width: 10em;
+
+  --table-full-example-synth-heading-text-align: center;
+  --table-full-example-synth-heading-vertical-align: bottom;
+  --table-full-example-synth-border-style: var(--border-solid);
+  --table-full-example-synth-background-color: var(--color-teal);
+  --table-full-example-synth-cell-text-align: center;
+  --table-full-example-synth-min-width: 10em;
+
+  --table-full-example-decorated-synth-heading-text-align: right;
+  --table-full-example-decorated-synth-heading-vertical-align: bottom;
+  --table-full-example-decorated-synth-background-color: var(--color-orange);
+  --table-full-example-decorated-synth-min-width: 20em;
+  --table-full-example-decorated-synth-cell-text-align: left;
+  --table-full-example-decorated-synth-border-style: var(--table-full-example-body-last-cell-border-style);
+
+  /* This relies on the colgroup colors */
+  /* Without the colgroup colors, we'd need to make this able to specify colors on a per column x odd/even row basis. */
+  --table-full-example-row-even-background-color: var(--color-transparent-white);
+
+  /* ========================== */
+  /* TWO BIT TRUTH TABLE STYLES */
+  /* ========================== */
+
+  --table-two-bit-background-color: var(--color-cyan);
+  --table-two-bit-heading-background-color: var(--color-orange);
+  --table-two-bit-border-collapse: separate;
+  --table-two-bit-border-style: var(--border-solid);
+  --table-two-bit-border-width: var(--border-1px);
+
+  /* Caption positioning */
+  --table-two-bit-caption-background-color: var(--color-rose);
+  --table-two-bit-caption-side: top;
+  --table-two-bit-caption-align: right;
+  --table-two-bit-caption-margin: 0;
+  --table-two-bit-caption-padding: 0.33em;
+
+  --table-two-bit-header-first-heading-caption-background-color: var(--color-orange);
+  --table-two-bit-header-first-heading-border-width: var(--border-1px-right-bottom);
+  --table-two-bit-header-first-heading-border-color: var(--border-color);
+  --table-two-bit-header-first-heading-border-style: var(--border-solid);
+
+  --table-two-bit-header-heading-caption-background-color: var(--color-orange);
+  --table-two-bit-header-heading-border-width: var(--border-1px-bottom);
+  --table-two-bit-header-heading-border-color: var(--border-color);
+  --table-two-bit-header-heading-border-style: var(--border-solid);
+
+  --table-two-bit-header-last-heading-caption-background-color: var(--color-orange);
+  --table-two-bit-header-last-heading-border-width: var(--table-two-bit-header-heading-border-width);
+  --table-two-bit-header-last-heading-border-color: var(--table-two-bit-header-heading-border-color);
+  --table-two-bit-header-last-heading-border-style: var(--table-two-bit-header-heading-border-style);
+
+  /* First column */
+  --table-two-bit-body-first-cell-border-width: var(--border-1px-right);
+  --table-two-bit-body-first-cell-border-color: var(--border-color);
+  --table-two-bit-body-first-cell-border-style: var(--border-solid);
+
+  /* Middle columns (in this case, these don't actually apply) */
+  --table-two-bit-body-cell-border-width: var(--border-none);
+  --table-two-bit-body-cell-border-color: var(--border-color);
+  --table-two-bit-body-cell-border-style: var(--border-solid);
+  --table-two-bit-cell-height: 2.3em;
+
+  /* Last columns (copy the middle column variables) */
+  --table-two-bit-body-last-cell-border-width: var(--table-two-bit-body-cell-border-width);
+  --table-two-bit-body-last-cell-border-color: var(--table-two-bit-body-cell-border-color);
+  --table-two-bit-body-last-cell-border-style: var(--table-two-bit-body-cell-border-style);
+
+  /* Header: First column styles */
+  --table-two-bit-b1-heading-text-align: center;
+  --table-two-bit-b1-heading-vertical-align: bottom;
+
+  /* Header: Second column styles */
+  --table-two-bit-b0-heading-text-align: center;
+  --table-two-bit-b0-heading-vertical-align: bottom;
+
+  /* Body: First column styles */
+  --table-two-bit-b1-border-style: solid dashed;
+  --table-two-bit-b1-width: 8em;
+  --table-two-bit-b1-cell-text-align: center;
+
+  /* Body: Second column styles */
+  --table-two-bit-b0-border-style: solid;
+  --table-two-bit-b0-width: 8em;
+  --table-two-bit-b0-cell-text-align: center;
+}
+
+article {
+  padding: 1em;
+  margin: 1em;
+  border-radius: 1em;
+}
+
+.example-0 {
+  background-color: var(--color-cyan);
+}
+
+.example-1 {
+  background-color: var(--color-lavender-bg);
+}
+
+.example-2 {
+  background-color: var(--color-teal);
+}
+
+.example-3 {
+  background-color: var(--color-salmon);
+}
+
+table-test-two-bit {
+  float: left;
+  padding-right: 0.66em;
+}
+
+table-test-simple {
+  float: right;
+  padding-left: 0.66em;
+}

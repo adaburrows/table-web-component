@@ -5,11 +5,68 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + Lit + TS</title>
-    <link rel="stylesheet" href="./src/index.css" />
+    <link rel="stylesheet" href="./test/index.css" />
     <script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
-    <script type="module" src="/src/table-test.ts"></script>
+    <script type="module" src="/test/table-test.ts"></script>
+    <script type="module" src="/test/table-test-two-bit.ts"></script>
+    <script type="module" src="/test/table-test-simple.ts"></script>
   </head>
   <body>
-    <table-test></table-test>
+    <article class="example-0">
+      <h1>@adaburrows/table</h1>
+      <p>The following are a few different examples that show off the capabilities of the table component. They range from very complex to very simple. They are all fairly simple in terms of everything but CSS.</p>
+    </article>
+    <article class="example-1">
+      <h2>A complete example</h2>
+      <p>That's a crooked tree. We'll send him to Washington. Follow the lay of the land. It's most important. Let's give him a friend too. Everybody needs a friend.</p>
+      <p>The man who does the best job is the one who is happy at his job. Play with the angles. Put your feelings into it, your heart, it's your world. This present moment is perfect simply due to the fact you're experiencing it.</p>
+      <table-test></table-test>
+      <code>
+      κατέβην χθὲς εἰς Πειραιᾶ μετὰ Γλαύκωνος τοῦ Ἀρίστωνος προσευξόμενός τε τῇ θεῷ καὶ ἅμα τὴν ἑορτὴν βουλόμενος θεάσασθαι τίνα τρόπον ποιήσουσιν ἅτε νῦν πρῶτον ἄγοντες. καλὴ μὲν οὖν μοι καὶ ἡ τῶν ἐπιχωρίων πομπὴ ἔδοξεν εἶναι, οὐ μέντοι ἧττον ἐφαίνετο πρέπειν ἣν οἱ Θρᾷκες ἔπεμπον.
+      <br/>προσευξάμενοι δὲ καὶ θεωρήσαντες ἀπῇμεν πρὸς τὸ ἄστυ. κατιδὼν οὖν πόρρωθεν ἡμᾶς οἴκαδε ὡρμημένους Πολέμαρχος ὁ Κεφάλου ἐκέλευσε δραμόντα τὸν παῖδα περιμεῖναί ἑ κελεῦσαι. καί μου ὄπισθεν ὁ παῖς λαβόμενος τοῦ ἱματίου, κελεύει ὑμᾶς, ἔφη, Πολέμαρχος περιμεῖναι. καὶ ἐγὼ μετεστράφην τε καὶ ἠρόμην ὅπου αὐτὸς εἴη. οὗτος, ἔφη, ὄπισθεν προσέρχεται: ἀλλὰ περιμένετε. ἀλλὰ περιμενοῦμεν, ἦ δ᾽ ὃς ὁ Γλαύκων.
+      <br/>καὶ ὀλίγῳ ὕστερον ὅ τε Πολέμαρχος ἧκε καὶ Ἀδείμαντος ὁ τοῦ Γλαύκωνος ἀδελφὸς καὶ Νικήρατος ὁ Νικίου καὶ ἄλλοι τινὲς ὡς ἀπὸ τῆς πομπῆς.
+      <br/>ὁ οὖν Πολέμαρχος ἔφη: ὦ Σώκρατες, δοκεῖτέ μοι πρὸς ἄστυ ὡρμῆσθαι ὡς ἀπιόντες.
+      <br/>οὐ γὰρ κακῶς δοξάζεις, ἦν δ᾽ ἐγώ.
+      <br/>ὁρᾷς οὖν ἡμᾶς, ἔφη, ὅσοι ἐσμέν;
+      <br/>πῶς γὰρ οὔ;
+      <br/>ἢ τοίνυν τούτων, ἔφη, κρείττους γένεσθε ἢ μένετ᾽ αὐτοῦ.
+      <br/>οὐκοῦν, ἦν δ᾽ ἐγώ, ἔτι ἓν λείπεται, τὸ ἢν πείσωμεν ὑμᾶς ὡς χρὴ ἡμᾶς ἀφεῖναι;
+      <br/>ἦ καὶ δύναισθ᾽ ἄν, ἦ δ᾽ ὅς, πεῖσαι μὴ ἀκούοντας;
+      <br/>οὐδαμῶς, ἔφη ὁ Γλαύκων.
+      <br/>ὡς τοίνυν μὴ ἀκουσομένων, οὕτω διανοεῖσθε.
+      </code>
+    </article>
+    <article class="example-2">
+      <h2>A simpler example</h2>
+      <h3>This is actually less simple than expected, mostly from the coloring, spacing, and border styling.</h3>
+      <p>
+        Brunch magna la croix labore cupidatat af banjo letterpress big mood et. Vice quis hella irure food truck raclette hoodie nostrud. Swag +1 nisi sartorial, flexitarian lo-fi commodo ipsum. Ascot street art commodo dolor ipsum.</p>
+      </p>
+      <table-test-two-bit></table-test-two-bit>
+      <p>
+        Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur adipisci[ng] velit, sed quia non numquam [do] eius modi tempora inci[di]dunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?
+      </p>
+      <p>
+        At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat…
+      </p>
+    </article>
+    <article class="example-3">
+      <h2>An honestly simple example</h2>
+      <h3>This is probably the simplest example, the only thing simpler is a table with no header.</h3>
+      <p>I'm baby swag venmo banh mi typewriter same, qui migas commodo. Pickled narwhal chambray deep v, coloring book gentrify hell of elit salvia tacos ad exercitation bodega boys tonx street art. Selfies yes plz beard vegan vaporware cold-pressed mixtape cronut kale chips. Man bun shabby chic incididunt, you probably haven't heard of them gluten-free quinoa elit.</p>
+      <table-test-simple></table-test-simple>
+      <p>
+        Man bun commodo ex cronut meh single-origin coffee marfa bitters. Shabby chic 8-bit mixtape franzen. Butcher beard snackwave, hammock sus XOXO adaptogen try-hard forage intelligentsia slow-carb synth. Culpa bitters gluten-free kale chips flexitarian voluptate health goth. Yuccie nostrud marfa before they sold out labore whatever four loko meditation.
+      </p>
+      <p>
+        Qui poke pariatur semiotics salvia trust fund. Trust fund JOMO yuccie air plant hashtag exercitation la croix. Next level man bun pickled keffiyeh brunch incididunt man braid echo park normcore prism proident JOMO art party. Eu chambray iceland, keytar aliquip whatever ea non. Slow-carb normcore nisi exercitation leggings adaptogen. Bushwick biodiesel unicorn, occupy officia sprout tumblr cupidatat. Tousled cray venmo ut consequat fam yr kombucha tumeric avocado toast.
+      </p>
+      <p>
+        Raw denim pabst mollit man braid, direct trade stumptown tonx do beard DSA ascot. Intelligentsia leggings polaroid, cronut selvage aute banh mi et dolore. Sartorial pinterest godard chillwave shoreditch, pickled chicharrones crucifix ugh bruh air plant glossier. Forage occaecat cupidatat semiotics, pork belly 90's prism labore Brooklyn JOMO irony mustache.
+      </p>
+    </article>
+    <article>
+      Heh, most of the English on the page is gibberish, while the Greek and Latin are actually excerpts.
+    </article>
   </body>
 </html>

@@ -1,19 +1,53 @@
 {
-  "name": "adaburrows-table",
-  "version": "0.1.0",
+  "name": "@adaburrows/table-web-component",
+  "version": "0.5.0",
   "type": "module",
-  "main": "dist/adaburrows-table.es.js",
+  "module": "dist/table-web-component.js",
   "exports": {
-    ".": "./dist/adaburrows-table.es.js"
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/table-web-component.js"
+    },
+    "./table": {
+      "types": "./types/table.d.ts",
+      "import": "./dist/table.js"
+    },
+    "./table-store": {
+      "types": "./types/table-store.d.ts",
+      "import": "./dist/table-store.js"
+    },
+    "./table-context-element": {
+      "types": "./types/table-context-element.d.ts",
+      "import": "./dist/table-context-element.js"
+    },
+    "./field-definitions": {
+      "types": "./types/field-definitions.d.ts",
+      "import": "./dist/field-definitions.js"
+    }
   },
-  "types": "types/adaburrows-table.d.ts",
+  "types": "types/index.d.ts",
   "files": [
     "dist",
-    "types"
+    "types",
+    "src"
   ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adaburrows/table-web-component.git"
+  },
+  "keywords": [
+    "UI",
+    "table"
+  ],
+  "author": "Jillian Ada Burrows",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/adaburrows/table-web-component/issues"
   },
   "dependencies": {
     "@lit-labs/context": "^0.2.0",

@@ -25,14 +25,16 @@ type FooterFunc<T> = (data: T[]) => TemplateResult
  * Allows easily passing in the field definitions and records
  */
 export interface TableStoreProps<T extends {}> {
+  tableId: string
   fieldDefs?: FieldDefinitions<T>
-  records?: T[],
-  caption?: string,
-  colGroups?: ColGroup[],
-  sortField?: string,
-  sortDirection?: SortDirection,
-  showHeader?: boolean,
+  records?: T[]
+  caption?: string
+  colGroups?: ColGroup[]
+  sortField?: string
+  sortDirection?: SortDirection
+  showHeader?: boolean
   footerFunction?: FooterFunc<T>
+  oddEvenColors?: boolean
 }
 
 /**
@@ -43,6 +45,7 @@ export interface TableStoreProps<T extends {}> {
  * setters will cause a rerender.
  */
 export class TableStore<T extends object> extends WritableShim<{}> implements Readable<{}> {
+  #_tableId: Writable<string> = writable('AdaTable');
   #_fieldDefs: Writable<FieldDefinitions<T>> = writable({} as FieldDefinitions<T>);
   #_records: Writable<Array<T>> = writable([]);
   #_caption: Writable<string | undefined> = writable(undefined);
@@ -50,10 +53,11 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
   #_sortDirection: Writable<SortDirection> = writable('na');
   #_sortField: Writable<string> = writable('');
   #_showHeader: Writable<boolean> = writable(false);
-  #_footerFunction: Writable<FooterFunc<T>> = writable((_: T[]) => html``)
+  #_footerFunction: Writable<FooterFunc<T>> = writable((_: T[]) => html``);
 
   constructor(init: TableStoreProps<T>) {
     super();
+    if (init.tableId) this.#_tableId.set(init.tableId);
     if (init.fieldDefs) this.#_fieldDefs.set(init.fieldDefs);
     if (init.records) this.#_records.set(init.records);
     if (init.caption) this.#_caption.set(init.caption);
@@ -64,6 +68,15 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
     if (init.footerFunction && typeof init.footerFunction == 'function') {
       this.#_footerFunction.set(init.footerFunction)
     }
+  }
+
+  get tableId() {
+    return get(this.#_tableId);
+  }
+
+  set tableId(id: string) {
+    this.#_tableId.set(id);
+    this.set();
   }
 
   get fieldDefs() {
@@ -157,7 +170,7 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
   /**
    * Returns the headings
    */
-  getHeadings(): Readable<string[]> {
+  getHeadings(): Readable<(TemplateResult | string)[]> {
     return derived(this.#_fieldDefs,
       (fieldDefs: FieldDefinitions<T>) => Object.values(fieldDefs).map(
         (fieldDef: FieldDefinition<T>) => fieldDef.heading

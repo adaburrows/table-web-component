@@ -2,10 +2,10 @@ import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { map } from 'lit/directives/map.js';
-import { TableContext } from './table-context-element';
-import { TableStore, TableStoreProps } from './table-store';
-import { Table } from './table';
-import { FieldDefinitions, FieldDefinition, numeric, lexicographic } from './field-definitions';
+import { TableContext } from '../src/table-context-element';
+import { TableStore } from '../src/table-store';
+import { Table } from '../src/table';
+import { FieldDefinitions, FieldDefinition, numeric, lexicographic } from '../src/field-definitions';
 
 /**
  * Here's our data schema
@@ -28,8 +28,8 @@ const Names = [
   'Adrian',
   'Cuauhtlatoatzin',
   'Paachi',
-  'Pote',
-  'Mata',
+  'Páte',
+  'Móta',
   'Saul',
   'Maria',
   'Margarita',
@@ -108,35 +108,6 @@ const fieldDefs: FieldDefinitions<Example> = {
 }
 
 /**
- * Set up an example table
- */
-const tableProps: TableStoreProps<Example> = {
-  fieldDefs,
-  // Start the table empty
-  records: [],
-  caption: "Howdy! This is a table caption.",
-  // These are used for coloring the column groups
-  colGroups: [
-    {span: 1, class: 'id-group'},
-    {span: 2, class: 'descriptive-group'},
-    {span: 2, class: 'numeric-group'},
-    {span: 1, class: 'synthetic-group'}
-  ],
-  // Set the table up sorted
-  sortDirection: 'dsc',
-  sortField: 'name',
-  // Show the header, some usages may not require headings
-  showHeader: true,
-  // Set up a table footer that sums the values of the age row and the synthetic age row
-  footerFunction: (data: Example[]) => {
-    const sum1 = data.map((datum) => datum.age).reduce((acc, value) => acc + value, 0);
-    //@ts-ignore
-    const sum2 = data.map((datum) => datum['synth']).reduce((acc, value) => acc + value, 0);
-    return html`<th colspan="3">Totals</th><td class="age">${sum1}</td><td class="synth">${sum2}</td><td></td>`;
-  }
-}
-
-/**
  * Component to test the component. Uses the ScopedRegistryHost mixin. None of
  * these components should be in the global web component registry.
  */
@@ -153,7 +124,34 @@ export class TableTest extends ScopedRegistryHost(LitElement) {
 
   constructor() {
     super();
-    this.tableStore = new TableStore(tableProps);
+    // Set up an example table
+    this.tableStore = new TableStore({
+      tableId: 'full-example',
+      fieldDefs,
+      // Start the table empty
+      records: [],
+      caption: "Howdy! This is a table caption.",
+      // These are used for coloring the column groups
+      colGroups: [
+        {span: 1, class: 'id-group'},
+        {span: 2, class: 'descriptive-group'},
+        {span: 2, class: 'numeric-group'},
+        {span: 1, class: 'synthetic-group'}
+      ],
+      // Set the table up sorted
+      sortDirection: 'dsc',
+      sortField: 'name',
+      // Show the header, some usages may not require headings
+      showHeader: true,
+      // Set up a table footer that sums the values of the age row and the synthetic age row
+      footerFunction: (data: Example[]) => {
+        const sum1 = data.map((datum) => datum.age).reduce((acc, value) => acc + value, 0);
+        //@ts-ignore
+        const sum2 = data.map((datum) => datum['synth']).reduce((acc, value) => acc + value, 0);
+        return html`<th colspan="3">Totals</th><td class="age">${sum1}</td><td class="synth">${sum2}</td><td></td>`;
+      },
+      oddEvenColors: true
+    });
   }
 
   /**
@@ -181,7 +179,6 @@ export class TableTest extends ScopedRegistryHost(LitElement) {
       -->
     `
   }
-
 }
 
 declare global {
