@@ -1,17 +1,17 @@
-import { TemplateResult } from "lit";
-
 /**
- * Function types
+ * Types
  */
+export type TemplateValue = unknown;
+export type RowFunc<T> = ((data: T[]) => TemplateValue) | TemplateValue;
+export type DecoratorFunc = (field: any) => TemplateValue;
 export type SynthesizerFunc<T> = (data: T) => any;
-export type DecoratorFunc = (field: any) => TemplateResult;
 export type SortFunc = (a: any, b: any) => number;
 
 /**
  * Convenience object for passing params
  */
 export interface FieldDefinitionProps<T> {
-  heading: string | TemplateResult;
+  heading: TemplateValue;
   synthesizer?: SynthesizerFunc<T>;
   decorator?: DecoratorFunc;
   sort?: SortFunc;
@@ -21,7 +21,7 @@ export interface FieldDefinitionProps<T> {
  * Defines the required data for a column
  */
 export class FieldDefinition<T extends object> implements FieldDefinitionProps<T> {
-  heading: string | TemplateResult = '';
+  heading: TemplateValue = '';
   synthesizer?: SynthesizerFunc<T>;
   decorator?: DecoratorFunc;
   sort?: SortFunc;

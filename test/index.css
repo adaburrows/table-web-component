@@ -67,7 +67,7 @@
   --table-full-example-height: 600px;
   --table-full-example-max-height: 600px;
   --table-full-example-margin: 0 auto;
-  --table-full-example-display: block;
+  --table-full-example-display: block; /* must be block or it will overflow the container */
   --table-full-example-overflow-x: scroll;
   --table-full-example-overflow-y: scroll;
   --table-full-example-border-width: var(--border-none);
@@ -202,8 +202,9 @@
   --table-two-bit-background-color: var(--color-cyan);
   --table-two-bit-heading-background-color: var(--color-orange);
   --table-two-bit-border-collapse: separate;
-  --table-two-bit-border-style: var(--border-solid);
   --table-two-bit-border-width: var(--border-1px);
+  --table-two-bit-border-style: var(--border-solid);
+  --table-two-bit-border-color: var(--color-black);
 
   /* Caption positioning */
   --table-two-bit-caption-background-color: var(--color-rose);

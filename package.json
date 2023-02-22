@@ -1,7 +1,7 @@
 {
-  "name": "@adaburrows/table",
-  "description": "A very flexible table written as a Lit-based web component.",
-  "version": "0.5.0",
+  "name": "@adaburrows/table-web-component",
+  "description": "A very flexible table written as a Lit-based web component. Sorting capabilities and sensible defaults. Can be used in a headless mode for flexibility.",
+  "version": "0.8.0",
   "type": "module",
   "module": "dist/index.js",
   "exports": {
@@ -14,13 +14,25 @@
       "types": "./types/table.d.ts",
       "import": "./dist/table.js"
     },
+    "./react-table": {
+      "types": "./types/react-table.d.ts",
+      "import": "./dist/react-table.js"
+    },
     "./table-store": {
       "types": "./types/table-store.d.ts",
       "import": "./dist/table-store.js"
     },
+    "./table-context": {
+      "types": "./types/table-context.d.ts",
+      "import": "./dist/table-context.js"
+    },
     "./table-context-element": {
       "types": "./types/table-context-element.d.ts",
       "import": "./dist/table-context-element.js"
+    },
+    "./react-table-context-element": {
+      "types": "./types/react-table-context-element.d.ts",
+      "import": "./dist/react-table-context-element.js"
     },
     "./field-definitions": {
       "types": "./types/field-definitions.d.ts",
@@ -35,7 +47,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -52,6 +65,7 @@
   },
   "dependencies": {
     "@lit-labs/context": "^0.2.0",
+    "@lit-labs/react": "^1.1.1",
     "@lit-labs/scoped-registry-mixin": "^1.0.1",
     "@webcomponents/scoped-custom-element-registry": "^0.0.7",
     "lit": "^2.2.0",
@@ -59,6 +73,8 @@
     "svelte": "^3.44.1"
   },
   "devDependencies": {
+    "@types/react": "^18.0.28",
+    "react": "^18.2.0",
     "typescript": "^4.9.3",
     "vite": "^4.0.4"
   }

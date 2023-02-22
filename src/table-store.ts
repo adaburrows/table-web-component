@@ -1,6 +1,4 @@
-import { html, TemplateResult } from 'lit';
-import { createContext } from '@lit-labs/context';
-import { FieldDefinition, FieldDefinitions } from "./field-definitions";
+import { TemplateValue, RowFunc, FieldDefinition, FieldDefinitions } from "./field-definitions";
 import {
   writable,
   Writable,
@@ -18,8 +16,7 @@ export interface ColGroup {
   class?: string
 }
 
-export type SortDirection = 'asc' | 'dsc' | 'na';
-type FooterFunc<T> = (data: T[]) => TemplateResult
+export type SortDirection = 'asc' | 'desc' | 'na';
 
 /**
  * Allows easily passing in the field definitions and records
@@ -28,12 +25,12 @@ export interface TableStoreProps<T extends {}> {
   tableId: string
   fieldDefs?: FieldDefinitions<T>
   records?: T[]
-  caption?: string
+  caption?: TemplateValue
   colGroups?: ColGroup[]
   sortField?: string
   sortDirection?: SortDirection
   showHeader?: boolean
-  footerFunction?: FooterFunc<T>
+  footerFunction?: RowFunc<T>
 }
 
 /**
@@ -47,12 +44,12 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
   #_tableId: Writable<string> = writable('AdaTable');
   #_fieldDefs: Writable<FieldDefinitions<T>> = writable({} as FieldDefinitions<T>);
   #_records: Writable<Array<T>> = writable([]);
-  #_caption: Writable<string | undefined> = writable(undefined);
+  #_caption: Writable<TemplateValue> = writable(undefined);
   #_colGroups: Writable<Array<ColGroup>> = writable([]);
   #_sortDirection: Writable<SortDirection> = writable('na');
   #_sortField: Writable<string> = writable('');
   #_showHeader: Writable<boolean> = writable(false);
-  #_footerFunction: Writable<FooterFunc<T>> = writable((_: T[]) => html``);
+  #_footerFunction: Writable<RowFunc<T>> = writable(undefined);
 
   constructor(init: TableStoreProps<T>) {
     super();
@@ -145,7 +142,7 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
     return get(this.#_footerFunction);
   }
 
-  set footerFunction(ff: FooterFunc<T>) {
+  set footerFunction(ff: RowFunc<T>) {
     this.#_footerFunction.set(ff);
     this.set();
   }
@@ -169,7 +166,7 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
   /**
    * Returns the headings
    */
-  getHeadings(): Readable<(TemplateResult | string)[]> {
+  getHeadings(): Readable<TemplateValue[]> {
     return derived(this.#_fieldDefs,
       (fieldDefs: FieldDefinitions<T>) => Object.values(fieldDefs).map(
         (fieldDef: FieldDefinition<T>) => fieldDef.heading
@@ -213,7 +210,7 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
       && this.fieldDefs[this.sortField].sort
     ) {
       const ascending = records.sort(this.getSortingFunction());
-      if (this.sortDirection === 'dsc') {
+      if (this.sortDirection === 'desc') {
         return ascending.reverse();
       }
       return ascending;
@@ -251,5 +248,3 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
     }
   }
 }
-
-export const TableStoreContext = createContext<TableStore<any>>('adaburrows-table-store');

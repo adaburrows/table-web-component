@@ -65,6 +65,7 @@ export class TableTestSimple extends ScopedRegistryHost(LitElement) {
     --table-simple-background-color: var(--color-lt-violet);
     --table-simple-border-style: var(--border-solid);
     --table-simple-border-width: var(--border-1px);
+    --table-simple-border-color: var(--color-black);
 
     --table-simple-b1-width: 8em;
     --table-simple-b0-width: 8em;

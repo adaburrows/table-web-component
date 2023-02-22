@@ -8,31 +8,42 @@
 First, make sure you install the package and its necessary dependencies. Since this project assumes you're using Lit, it expects that to be included by your project. It also expects lit-svelte-stores to be loaded. If you're not using any of those directly, make sure they are set as peer dependencies. Like so:
 
 ```
-npm i --save @adaburrows/table lit lit-svelte-stores
-```
-
-or
-
-```
-npm i --save-peer lit lit-svelte-stores
-npm i --save @adaburrows/table
+npm i --save adaburrows/table-web-component
 ```
 
 If you're not making a component using the scoped registry mixin, then you can import everything you need in one line:
 
 ```ts
-import { FieldDefinitions, FieldDefinition, TableStore } from '@adaburrows/table/table';
+// This registers the <adaburrows-table> and <adaburrows-table-context> tags globally
+import { FieldDefinitions, FieldDefinition, TableStore } from '@adaburrows/table-web-component';
 ```
 
-Otherwise, you can use the full set of imports:
+Otherwise, you can use choose to use the scoped registry mixin:
 
 ```ts
 import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { FieldDefinitions, FieldDefinition } from '@adaburrows/table/field-definitions';
-import { TableStore } from '@adaburrows/table/table-store';
-import { Table } from '@adaburrows/table/table';
+// The following are required because this doesn't register the components globally
+import { FieldDefinitions, FieldDefinition } from '@adaburrows/table-web-component/field-definitions';
+import { TableStore } from '@adaburrows/table-web-component/table-store';
+import { Table } from '@adaburrows/table-web-component/table';
+```
+
+If you choose to use the ScopedRegistryHost mixin in your project, make sure you install it and include the polyfill in your index.html or be sure to import it in you top level index.ts beofre you load you own component code:
+
+```
+npm i --save @webcomponents/scoped-custom-element-registry @lit-labs/scoped-registry-mixin
+```
+
+```html
+<script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
+```
+
+or
+
+```js
+import @webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js;
 ```
 
 Then set up the data that will be displayed. In this case, we're just going to show a simple 2 bit truth table.
@@ -96,19 +107,19 @@ Now we can add the render method:
 And just for funsies, let's add some CSS that takes some CSS-variables you can define (or grab from the [test CSS](https://github.com/adaburrows/table-web-component/blob/main/test/index.css)). The table actually generates a bunch of CSS variables that can be specified at any scope above the table component. The variables are all prefixed with `--table-${tableID}-` and end with a description of the part of the table they style. So here we're going to specify a background color, a border style for the outside of the table, a border width, and make sure each column is 8em wide.
 
 ```ts
-  static styles = css`
-  :host {
-    /* =================== */
-    /* SIMPLE TABLE STYLES */
-    /* =================== */
+static styles = css`
+:host {
+  /* =================== */
+  /* SIMPLE TABLE STYLES */
+  /* =================== */
 
-    --table-simple-background-color: var(--color-lt-violet);
-    --table-simple-border-style: var(--border-solid);
-    --table-simple-border-width: var(--border-1px);
+  --table-simple-background-color: var(--color-lt-violet);
+  --table-simple-border-style: var(--border-solid);
+  --table-simple-border-width: var(--border-1px);
 
-    --table-simple-b1-width: 8em;
-    --table-simple-b0-width: 8em;
-  }`;
+  --table-simple-b1-width: 8em;
+  --table-simple-b0-width: 8em;
+}`;
 ```
 
 You can see a complete version of this in the [test/table-test-simple.ts](https://github.com/adaburrows/table-web-component/blob/main/test/table-test-simple.ts) component.
@@ -130,7 +141,7 @@ This pulls in Lit HTML to allow rendering HTML in the headings. Technically, thi
 
 ### Adding a caption to the table
 
-Adding a caption is pretty simple, we just change the config passed to the `TableStore`:
+Adding a caption is pretty simple, we just change the config passed to the `TableStore`. The value passed in, can be any value supported by the templating engine. In this case, we're using lit-html. In the headless mode, another renderer, like JSX/TSX in React, could be used and this would accept a fragment in that case.
 
 ```ts
     // Set up an example table
@@ -274,7 +285,7 @@ Please see [the source code](https://github.com/adaburrows/table-web-component/b
 ```ts
 export interface FieldDefinitionProps<T> {
   // What it says on the tin, this is displayed in the header for the column
-  heading: string | TemplateResult;
+  heading: TemplateValue;
 
   // This takes a whole object, a whole record of untransformed data and creates a new field from it.
   synthesizer?: SynthesizerFunc<T>;
@@ -300,8 +311,9 @@ export interface TableStoreProps<T extends {}> {
   // The records
   records?: T[]
 
-  // The table caption as a string
-  caption?: string
+  // The table caption
+  // under the hood, this can be anything, so it can work with any library
+  caption?: TemplateValue
 
   // The set of column groups as decribed above
   colGroups?: ColGroup[]
@@ -310,13 +322,13 @@ export interface TableStoreProps<T extends {}> {
   sortField?: string
 
   // Initial direction of the sort used if an initial sort field is set
-  sortDirection?: SortDirection
+  sortDirection?: SortDirection // One of 'asc','desc','na'
 
   // Show the header, or hide the header
   showHeader?: boolean
 
   // Function passed the whole set of records that returns the footer HTML
-  footerFunction?: FooterFunc<T>
+  footerFunction?: RowFunc<T>
 }
 ```
 
@@ -328,13 +340,266 @@ The whole table can have a border around it, or not. The whole table can be give
 
 To see the gory details of how all of this is put together, see the [table-style-directive.ts](https://github.com/adaburrows/table-web-component/blob/main/src/table-style-directive.ts). Or, to ease into it all, follow along. There's probably too much to take in at once anyways.
 
-### First things first
+### Basic Styling
 
 CSS variables can be put in various scopes. The easiest way of specifiying everything is to put it in an included CSS file. In that case, every variable is placed in the `:root {}` block. In the case of specifiying it in a component's shadown DOM, then they can be placed in a `:host {}` block.
 
-The basic variables that can be specified for a table are:
+The basic variables that can be specified for a table, along with their defaults, are these:
 
 ```css
 :host {
+  --table-${tableId}-background-color: transparent ;
+  --table-${tableId}-width: 100% ;
+  --table-${tableId}-max-width: 100% ;
+  --table-${tableId}-height: auto ;
+  --table-${tableId}-max-height: auto ;
+  --table-${tableId}-margin: 0 ;
+  --table-${tableId}-display: table ;
+  --table-${tableId}-overflow-x: scroll ;
+  --table-${tableId}-overflow-y: scroll ;
+  --table-${tableId}-border-width: 2px ;
+  --table-${tableId}-border-color: fuschia ;
+  --table-${tableId}-border-style: solid ;
+  --table-${tableId}-border-collapse: separate ;
+  --table-${tableId}-border-spacing: 0px ;
 }
 ```
+
+Different parts of the table can be styled differently, for instance, the caption has variables that have the following default values.
+
+```css
+:host {
+  --table-${tableId}-caption-background-color: transparent ;
+  --table-${tableId}-caption-side: bottom ;
+  --table-${tableId}-caption-align: left ;
+  --table-${tableId}-caption-margin: 0 ;
+  --table-${tableId}-caption-padding: 0 ;
+  --table-${tableId}-caption-border-width: 0 ;
+  --table-${tableId}-caption-border-color: transparent ;
+  --table-${tableId}-caption-border-style: none ;
+}
+```
+This variable controls the padding in each of the cells in the table.
+
+```css
+:host {
+  --table-${tableId}-element-padding: 0.33em;
+}
+```
+
+These variables can be used to create a sticky header, but their defaults create a normal table heading.
+
+```css
+:host {
+  --table-${tableId}-header-position: static;
+  --table-${tableId}-header-top: 0px;
+}
+```
+
+### Per column variables
+
+The sizes of each column can be specified through variables specified on a per field basis:
+
+```css
+:host {
+  --table-${tableId}-${field}-min-width: auto;
+  --table-${tableId}-${field}-max-width: auto;
+  --table-${tableId}-${field}-width: auto;
+}
+```
+
+Heading styles:
+
+```css
+:host {
+  --table-${tableId}-${field}-heading-border-style: ;
+  --table-${tableId}-${field}-heading-background-color: ;
+  --table-${tableId}-${field}-heading-text-align: ;
+  --table-${tableId}-${field}-heading-vertical-align: ;
+}
+```
+
+Body cell styles:
+
+```css
+:host {
+  --table-${tableId}-${field}-cell-border-style: ;
+  --table-${tableId}-${field}-cell-background-color: ;
+  --table-${tableId}-${field}-cell-text-align: ;
+  --table-${tableId}-${field}-cell-vertical-align: ;
+}
+```
+
+### Odd-even row coloring:
+
+The coloring of odd/even rows is determined primarily by the first four variables listed below. If those are not defined then the next three variables will be used in order. If they are not present, the last three variables will be used. If those aren't present, it will default to transparent.
+
+```css
+:host {
+  --table-${tableId}-${field}-row-even-background-color: white;
+  --table-${tableId}-row-even-background-color: white;
+  --table-${tableId}-${field}-row-odd-background-color: lt-grey;
+  --table-${tableId}-row-odd-background-color: lt-grey;
+  --table-${tableId}-${field}-cell-background-color: white;
+  --table-${tableId}-body-cell-background-color: white;
+  --table-${tableId}-background-color: transparent;
+}
+```
+
+### Column groups
+
+Every column group can have a particular background color assigned to them.
+
+```css
+:host {
+  --table-${tableId}-${colGroup}-color: transparent;
+}
+```
+
+### Customizing each section
+
+The table can be divided into the header, body, and footer sections. The three sections of the table have a few variables that can be set:
+
+```css
+:host {
+  --table-${tableId}-${section}-min-height: auto;
+  --table-${tableId}-${section}-max-height: auto;
+  --table-${tableId}-${section}-height: auto;
+}
+```
+
+### Customizing borders
+
+Note: By default all the borders that aren't specified have border widths of 0px.
+
+The next set of variables need a table to help explain. Each part of the table can further be subdivded into multiple regions that each can be styled a certain way. This is mostly so that borders can be correctly styled to match. If you collapse the borders, then much of this configuration becomes unnecessary.
+
+| header-first-heading | header-heading | header-last-heading |
+|-|-|-|
+| body-first-heading | body-heading | body-last-heading |
+| body-first-cell | body-cell | body-last-cell |
+| footer-first-heading | footer-heading | footer-last-heading |
+| footer-first-cell | footer-cell | footer-last-cell |
+
+Each of these regions have the following variables:
+
+```css
+:host {
+  --table-${tableId}-${region}-background-color: transparent;
+  --table-${tableId}-${region}-border-width: 1px 1px 1px 1px;
+  --table-${tableId}-${region}-border-color: black;
+  --table-${tableId}-${region}-border-style: solid dotted dashed none;
+  --table-${tableId}-${region}-border-radius: 0px;
+}
+```
+
+Since each of these variable can specify values for each side of the cell it corresponds to, this means there's a few options for ensuring the borders all tile properly.
+
+Oh, I just realized that because there's no body-first-row-first-cell, body-first-row-last-cell, body-last-row-first-cell, body-last-row-last-cell CSS rules, there's no way to make a table with rounded corners without having both a header and a footer. Whoops.
+
+### Order of precedence
+
+Background colors (least to most specific)
+```
+--table-${tableId}-background-color
+--table-${tableId}-heading-background-color
+--table-${tableId}-header-first-heading-background-color
+--table-${tableId}-header-heading-background-color
+--table-${tableId}-header-last-heading-background-color
+--table-${tableId}-body-first-cell-background-color
+--table-${tableId}-body-cell-background-color
+--table-${tableId}-body-last-cell-background-color
+--table-${tableId}-${field}-background-color
+--table-${tableId}-${field}-heading-background-color
+--table-${tableId}-${field}-cell-background-color
+--table-${tableId}-row-even-background-color
+--table-${tableId}-row-odd-background-color
+--table-${tableId}-${field}-row-even-background-color
+--table-${tableId}-${field}-row-odd-background-color
+```
+
+Caption background colors (least to most specific)
+
+```
+transparent
+--table-${tableId}-background-color
+--table-${tableId}-caption-background-color
+```
+
+Header background colors (least to most specific)
+
+```
+transparent
+--table-${tableId}-background-color
+--table-${tableId}-heading-background-color
+--table-${tableId}-${field}-background-color
+--table-${tableId}-${field}-heading-background-color
+```
+
+Text align (least to most specific)
+
+```
+--table-text-align
+--table-${tableId}-${field}-text-align
+--table-${tableId}-${field}-heading-text-align
+--table-${tableId}-${field}-cell-text-align
+```
+
+Vertical align (least to most specific)
+
+```
+--table-vertical-align
+--table-${tableId}-${field}-vertical-align
+--table-${tableId}-${field}-heading-vertical-align
+--table-${tableId}-${field}-cell-vertical-align
+```
+
+## Headless usage
+
+If you need a more custom HTML structure, or more custom styling, one can just use the `TableStore` directly to create their own component in just about any framework. The usage is pretty straighforward. The code in the `Table` component serves as a guide on how to use it. When using custom HTML, you can easily swap out a `<table>` structure for a flexbox or grid layout structure. Just do the following in your code and be sure to style the generated HTML properly:
+
+```ts
+import { FieldDefinitions, FieldDefinition } from '@adaburrows/table/field-definitions';
+import { TableStore } from '@adaburrows/table/table-store';
+
+// Insert the rest of the component here.
+
+// ...
+
+  static render() {
+    render(): TemplateResult {
+      const fieldDefs = this.tableStore.fieldDefs;
+      const fields = get(this.tableStore.getFields());
+      const records = get(this.tableStore.getRecords());
+      return html`
+      <div id="${this.tableStore.tableId}">
+        ${this.tableStore.caption && this.tableStore.caption != '' && html`<div class="table-caption">${this.tableStore.caption}</div>`}
+        <div class="table-header">
+          ${map(fields,
+            field=>html`
+            <div class="table-header table-column-${field}">
+              ${this.heading(field)}
+            </div>`
+          )}
+        </div>
+        <div class="table-body">
+          ${map(records,
+          row=>html`
+            <div class="table-row">
+              ${map(fields,
+                field=>html`
+                <div class="table-cell table-column-${field}">
+                  ${this.tableStore.decorateField(field, record[field])}
+                </div>`
+              )}
+            </div>`
+          )}
+        </div>
+      </div>`;
+    }
+  }
+
+// ...
+```
+
+Additionally, if you want to use React as your framework. Then it would be pretty simple to use [`react-store-adaptors`](https://github.com/adaburrows/react-store-adaptors) to adapt the Svelte store to your JSX/TSX component. Otherwise, just import the React wrapped components from `@adaburrows/table-web-component/react-table` and `@adaburrows/table-web-component/react-table-context-element`.

@@ -1,18 +1,19 @@
 import { css, html, LitElement } from 'lit';
 import { provide } from '@lit-labs/context';
 import { property } from 'lit/decorators.js';
-import { TableStore, TableStoreContext } from './table-store';
+import { TableStore } from './table-store';
+import { TableStoreContext } from './table-context';
 
 /**
  * create react wrapper with instructions on how to wire it up
  */
 
 /**
- * TableContext for wiring up a TableStore without having to pass it down through
+ * TableContextElement for wiring up a TableStore without having to pass it down through
  * a bunch of other component props. Mostly useful for tables that are decorated
  * in a nest of other components.
  */
-export class TableContext extends LitElement {
+export class TableContextElement extends LitElement {
 
   @provide({ context: TableStoreContext })
   @property({ type: Object })

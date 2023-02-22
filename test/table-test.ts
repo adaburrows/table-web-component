@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { map } from 'lit/directives/map.js';
-import { TableContext } from '../src/table-context-element';
+import { TableContextElement } from '../src/table-context-element';
 import { TableStore } from '../src/table-store';
 import { Table } from '../src/table';
 import { FieldDefinitions, FieldDefinition, numeric, lexicographic } from '../src/field-definitions';
@@ -103,7 +103,7 @@ const fieldDefs: FieldDefinitions<Example> = {
   'decorated-synth': new FieldDefinition<Example>({
     heading: 'Decorated Synthetic Field',
     synthesizer: (data: Example) => [data.id, data.name, data.age],
-    decorator: (field: any) => html`<ul>${map(field, (i) => html`<li><button>${i}</button></li>`)}</ul>`
+    decorator: (field: []) => html`<ul>${map(field, (i) => html`<li><button>${i}</button></li>`)}</ul>`
   })
 }
 
@@ -113,9 +113,11 @@ const fieldDefs: FieldDefinitions<Example> = {
  */
 @customElement('table-test')
 export class TableTest extends ScopedRegistryHost(LitElement) {
+  // As you can see, we can make this be whatever tag name we really want
+  // as long as it has at least two hyphen separated parts
   static elementDefinitions = {
-    'adaburrows-table-context': TableContext,
-    'adaburrows-table': Table,
+    'table-context': TableContextElement,
+    'a-t': Table,
   }
 
   // This means this component not will rerender, but lit-svelte-stores
@@ -130,7 +132,7 @@ export class TableTest extends ScopedRegistryHost(LitElement) {
       fieldDefs,
       // Start the table empty
       records: [],
-      caption: "Howdy! This is a table caption.",
+      caption: html`<p>Howdy! This is a table caption.</p>`,
       // These are used for coloring the column groups
       colGroups: [
         {span: 1, class: 'id-group'},
@@ -139,7 +141,7 @@ export class TableTest extends ScopedRegistryHost(LitElement) {
         {span: 1, class: 'synthetic-group'}
       ],
       // Set the table up sorted
-      sortDirection: 'dsc',
+      sortDirection: 'desc',
       sortField: 'name',
       // Show the header, some usages may not require headings
       showHeader: true,
@@ -164,17 +166,17 @@ export class TableTest extends ScopedRegistryHost(LitElement) {
     // The following are both valid ways to use the component
     return html`
       <button @click=${this.newRows}>New Rows</button>
-      <adaburrows-table .tableStore=${this.tableStore}></adaburrows-table>
+      <a-t .tableStore=${this.tableStore}></a-t>
 
       <!-- Use the context to bypass passing props through arbitrary nesting -->
       <!--
-      <adaburrows-table-context .store=${this.tableStore}>
+      <table-context .store=${this.tableStore}>
         <div>
           <div>
-            <adaburrows-table></adaburrows-table>
+            <table></table>
           </div>
         </div>
-      </adaburrows-table-context>
+      </table-context>
       -->
     `
   }

@@ -1,4 +1,5 @@
-import { LitElement, html, TemplateResult } from 'lit'
+import { LitElement, html, TemplateResult } from 'lit';
+import '@webcomponents/scoped-custom-element-registry';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { property } from 'lit/decorators.js'
 import { consume } from '@lit-labs/context';
@@ -6,7 +7,8 @@ import { map } from 'lit/directives/map.js';
 import { get } from 'svelte/store';
 import { StoreSubscriber } from 'lit-svelte-stores';
 import { FieldDefinitions } from './field-definitions';
-import { TableStore, TableStoreContext } from './table-store';
+import { TableStore } from './table-store';
+import { TableStoreContext } from './table-context';
 import { renderTableStyles } from './table-style-directive';
 
 /**
@@ -61,8 +63,13 @@ export class Table extends ScopedRegistryHost(LitElement) {
   sortIndicator(fieldDefs: FieldDefinitions<any>, field: string) {
     const sortDirection = this.tableStore.sortDirection;
     const sortFragment = html`
-    <svg style="display: inline; width:24px; height: 24px; transform: scale(0.6) translate(0%, +50%);">
-      <use xlink:href="/all.svg#gg-select"/>
+    <svg style="display: inline; width:24px; height: 24px; transform: translate(0%, +30%);">
+      <path
+        d="M9.17154 11.508L7.75732 10.0938L12 5.85114L16.2426 10.0938L14.8284 11.508L12 8.67956L9.17154 11.508Z"
+        fill="currentColor" />
+      <path
+        d="M9.17154 12.492L7.75732 13.9062L12 18.1489L16.2426 13.9062L14.8284 12.492L12 15.3204L9.17154 12.492Z"
+        fill="currentColor" />
     </svg>`;
     if (fieldDefs[field].sort) {
       if (field == this.tableStore.sortField) {
@@ -71,13 +78,17 @@ export class Table extends ScopedRegistryHost(LitElement) {
             break;
           case 'asc':
             return html`
-            <svg style="display: inline; width:24px; height: 24px; transform: scale(0.6) translate(0%, +50%);">
-              <use xlink:href="/all.svg#gg-chevron-up"/>
+            <svg style="display: inline; width:24px; height: 24px; transform: translate(0%, +30%);">
+              <path
+                d="M14.8285 14.8284L16.2427 13.4142L12.0001 9.17161L7.75745 13.4142L9.17166 14.8285L12.0001 12L14.8285 14.8284Z"
+                fill="currentColor" />
             </svg>`;
-          case 'dsc':
+          case 'desc':
             return html`
-            <svg style="display: inline; width:24px; height: 24px; transform: scale(0.6) translate(0%, +50%);">
-              <use xlink:href="/all.svg#gg-chevron-down"/>
+            <svg style="display: inline; width:24px; height: 24px; transform: translate(0%, +30%);">
+              <path
+                d="M7.75745 10.5858L9.17166 9.17154L12.0001 12L14.8285 9.17157L16.2427 10.5858L12.0001 14.8284L7.75745 10.5858Z"
+                fill="currentColor" />
             </svg>`;
         }
       }
@@ -93,8 +104,8 @@ export class Table extends ScopedRegistryHost(LitElement) {
     return () => {
       if (this.tableStore.sortField == field) {
         if (this.tableStore.sortDirection == 'asc') {
-          this.tableStore.sortDirection = 'dsc';
-        } else if (this.tableStore.sortDirection == 'dsc') {
+          this.tableStore.sortDirection = 'desc';
+        } else if (this.tableStore.sortDirection == 'desc') {
           this.tableStore.sortDirection = 'na';
           this.tableStore.sortField = '';
         }
@@ -147,19 +158,6 @@ export class Table extends ScopedRegistryHost(LitElement) {
   }
 
   /**
-   * Render a row
-   */
-  row(record: any, fields: string[]): TemplateResult {
-    return html`
-    <tr>
-      ${map(
-        fields,
-        (field) => html`<td class="${field}">${this.tableStore.decorateField(field, record[field])}</td>`
-      )}
-    </tr>`;
-  }
-
-  /**
    * Render the rows in the body.
    */
   body(): TemplateResult {
@@ -169,7 +167,16 @@ export class Table extends ScopedRegistryHost(LitElement) {
     <tbody>
       ${map(
         records,
-        (record) => html`${this.row(record, fields)}`
+        (record) => html`
+        <tr>
+          ${map(
+            fields,
+            (field) => html`
+            <td class="${field}">
+              ${this.tableStore.decorateField(field, record[field])}
+            </td>`
+          )}
+        </tr>`
       )}
     </tbody>`;
   }
@@ -178,8 +185,12 @@ export class Table extends ScopedRegistryHost(LitElement) {
    * Render the footer.
    */
   foot(): TemplateResult {
-    const footerCells = this.tableStore.footerFunction(get(this.tableStore.getRecords()));
-    return html`<tfoot>${footerCells}</tfoot>`;
+    if (this.tableStore.footerFunction && typeof this.tableStore.footerFunction == 'function') {
+      const footerCells = this.tableStore.footerFunction(get(this.tableStore.getRecords()));
+      return html`<tfoot>${footerCells}</tfoot>`;
+    } else {
+      return html``;
+    }
   }
 
   /**
