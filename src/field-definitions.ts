@@ -2,8 +2,8 @@
  * Types
  */
 export type TemplateValue = unknown;
+export type CellTemplate = (value: any) => TemplateValue;
 export type RowFunc<T> = ((data: T[]) => TemplateValue) | TemplateValue;
-export type DecoratorFunc = (field: any) => TemplateValue;
 export type SynthesizerFunc<T> = (data: T) => any;
 export type SortFunc = (a: any, b: any) => number;
 
@@ -11,9 +11,9 @@ export type SortFunc = (a: any, b: any) => number;
  * Convenience object for passing params
  */
 export interface FieldDefinitionProps<T> {
-  heading: TemplateValue;
+  heading?: TemplateValue;
   synthesizer?: SynthesizerFunc<T>;
-  decorator?: DecoratorFunc;
+  decorator?: CellTemplate;
   sort?: SortFunc;
 }
 
@@ -21,20 +21,21 @@ export interface FieldDefinitionProps<T> {
  * Defines the required data for a column
  */
 export class FieldDefinition<T extends object> implements FieldDefinitionProps<T> {
-  heading: TemplateValue = '';
+  heading?: TemplateValue;
   synthesizer?: SynthesizerFunc<T>;
-  decorator?: DecoratorFunc;
+  decorator?: CellTemplate;
   sort?: SortFunc;
 
   constructor(init: FieldDefinitionProps<T>) {
-    this.heading = init.heading;
-    if (init.synthesizer) this.synthesizer = init.synthesizer
-    if (init.decorator) this.decorator = init.decorator
-    if (init.sort) this.sort = init.sort
+    if (init.heading) this.heading = init.heading;
+    if (init.synthesizer) this.synthesizer = init.synthesizer;
+    if (init.decorator) this.decorator = init.decorator;
+    if (init.sort) this.sort = init.sort;
   }
 }
 
-export type FieldDefinitions<T extends object> = Record<keyof T | string, FieldDefinition<T>>;
+export type FieldDefinitions<T extends object> = Record<string, FieldDefinition<T>>;
+export type FieldDefinitionMap<T extends object> = Map<string, FieldDefinition<T>>;
 
 // Sorting functions
 

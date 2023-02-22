@@ -568,30 +568,25 @@ import { TableStore } from '@adaburrows/table/table-store';
 
   static render() {
     render(): TemplateResult {
-      const fieldDefs = this.tableStore.fieldDefs;
-      const fields = get(this.tableStore.getFields());
-      const records = get(this.tableStore.getRecords());
       return html`
       <div id="${this.tableStore.tableId}">
         ${this.tableStore.caption && this.tableStore.caption != '' && html`<div class="table-caption">${this.tableStore.caption}</div>`}
         <div class="table-header">
-          ${map(fields,
-            field=>html`
+          ${map(this.tableStore.getHeadings(), (rowValue) => {
+            const {field, value} = rowValue;
+            return html`
             <div class="table-header table-column-${field}">
-              ${this.heading(field)}
+              ${value}
             </div>`
-          )}
+          })}
         </div>
         <div class="table-body">
-          ${map(records,
-          row=>html`
+          ${map(this.tableStore.getRows(), (row) => html`
             <div class="table-row">
-              ${map(fields,
-                field=>html`
-                <div class="table-cell table-column-${field}">
-                  ${this.tableStore.decorateField(field, record[field])}
-                </div>`
-              )}
+              ${map(row, (rowValue: RowValue) => {
+                const {field, value} = rowValue;
+                return html`<div class="table-cell table-column-${field}">${value}</div>`
+              })}
             </div>`
           )}
         </div>

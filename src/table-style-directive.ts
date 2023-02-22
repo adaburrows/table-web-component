@@ -1,6 +1,5 @@
 import { html } from 'lit'
 import { Directive, directive } from 'lit/directive.js';
-import { get } from 'svelte/store';
 import { TableStore } from './table-store';
 
 /**
@@ -12,7 +11,7 @@ class TableStyleDirective extends Directive {
 
   generateStyleString(tableStore: TableStore<any>) {
     const tableId = tableStore.tableId;
-    const fields = get(tableStore.getFields());
+    const fields = tableStore.getFields();
     const colGroups = tableStore.colGroups.map((cg) => cg.class).filter((klass) => klass && klass != '');
 
     return `

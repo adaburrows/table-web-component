@@ -1,13 +1,11 @@
 import { LitElement, html, TemplateResult } from 'lit';
-import '@webcomponents/scoped-custom-element-registry';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { property } from 'lit/decorators.js'
 import { consume } from '@lit-labs/context';
 import { map } from 'lit/directives/map.js';
-import { get } from 'svelte/store';
 import { StoreSubscriber } from 'lit-svelte-stores';
-import { FieldDefinitions } from './field-definitions';
-import { TableStore } from './table-store';
+import { FieldDefinitions, TemplateValue } from './field-definitions';
+import { RowValue, TableStore } from './table-store';
 import { TableStoreContext } from './table-context';
 import { renderTableStyles } from './table-style-directive';
 
@@ -47,11 +45,10 @@ export class Table extends ScopedRegistryHost(LitElement) {
    * Render the <colgroup> and <col>s.
    */
   colGroup(): TemplateResult {
-    const colGroups = this.tableStore.colGroups;
     return html`
     <colgroup>
       ${map(
-        colGroups,
+        this.tableStore.colGroups,
         (c) => html`<col span="${c.span}" class="${c.class}">`
       )}
     </colgroup>`;
@@ -122,12 +119,10 @@ export class Table extends ScopedRegistryHost(LitElement) {
    * Table behavior:
    * - clicking on sortable headings are stateful
    * - if new column selection, reset to 'asc' sort and set sortField
-   * - if same column selected again, change to 'dsc'
+   * - if same column selected again, change to 'desc'
    * - if same column selected thrice, change to 'na' and remove sortField
    */
-  heading(field: string): TemplateResult {
-    const fieldDefs = this.tableStore.fieldDefs;
-    const heading = fieldDefs[field].heading;
+  sortingDecorator(heading: TemplateValue, field: string, fieldDefs: FieldDefinitions<any>): TemplateResult {
     return html`
     <th @click=${this.headerHandler(field)} class="${field}">
       ${heading}
@@ -143,14 +138,14 @@ export class Table extends ScopedRegistryHost(LitElement) {
    */
   header(): TemplateResult {
     if (this.tableStore.showHeader) {
-      const fields = get(this.tableStore.getFields());
+      const fieldDefs = this.tableStore.fieldDefs;
       return html`
       <thead>
         <tr>
-          ${map(
-            fields,
-            (field) => this.heading(field)
-          )}
+          ${map(this.tableStore.getHeadings(), (rowValue) => {
+            const {field, value} = rowValue;
+            return this.sortingDecorator(value, field, fieldDefs);
+          })}
         </tr>
       </thead>`
     }
@@ -161,21 +156,14 @@ export class Table extends ScopedRegistryHost(LitElement) {
    * Render the rows in the body.
    */
   body(): TemplateResult {
-    const fields = get(this.tableStore.getFields());
-    const records = get(this.tableStore.getRecords());
     return html`
     <tbody>
-      ${map(
-        records,
-        (record) => html`
+      ${map(this.tableStore.getRows(), (row) => html`
         <tr>
-          ${map(
-            fields,
-            (field) => html`
-            <td class="${field}">
-              ${this.tableStore.decorateField(field, record[field])}
-            </td>`
-          )}
+          ${map(row, (rowValue: RowValue) => {
+            const {field, value} = rowValue;
+            return html`<td class="${field}">${value}</td>`
+          })}
         </tr>`
       )}
     </tbody>`;
@@ -186,7 +174,7 @@ export class Table extends ScopedRegistryHost(LitElement) {
    */
   foot(): TemplateResult {
     if (this.tableStore.footerFunction && typeof this.tableStore.footerFunction == 'function') {
-      const footerCells = this.tableStore.footerFunction(get(this.tableStore.getRecords()));
+      const footerCells = this.tableStore.footerFunction(this.tableStore.getRecords());
       return html`<tfoot>${footerCells}</tfoot>`;
     } else {
       return html``;

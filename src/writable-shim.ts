@@ -4,8 +4,8 @@ import {
 } from "svelte/store";
 
 // Svelte types which are not exported
-type Invalidator<T> = (value?: T) => void;
-type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidator<T>];
+export type Invalidator<T> = (value?: T) => void;
+export type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidator<T>];
 
 export class WritableShim<T extends {}> {
   #_subscribers: Set<SubscribeInvalidateTuple<T>> = new Set();
