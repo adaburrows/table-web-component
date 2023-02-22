@@ -67,13 +67,13 @@
     "@lit-labs/context": "^0.2.0",
     "@lit-labs/react": "^1.1.1",
     "@lit-labs/scoped-registry-mixin": "^1.0.1",
-    "@webcomponents/scoped-custom-element-registry": "^0.0.7",
     "lit": "^2.2.0",
     "lit-svelte-stores": "^0.2.1",
     "svelte": "^3.44.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
+    "@webcomponents/scoped-custom-element-registry": "^0.0.7",
     "react": "^18.2.0",
     "typescript": "^4.9.3",
     "vite": "^4.0.4"

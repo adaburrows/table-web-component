@@ -39,7 +39,7 @@ export class TableTestSimple extends ScopedRegistryHost(LitElement) {
   constructor() {
     super();
     // Set up an example table
-    this.tableStore = new TableStore({
+    this.tableStore = new TableStore<TwoBits>({
       tableId: 'simple',
       fieldDefs,
       records: [
