@@ -1,7 +1,7 @@
 {
   "name": "@adaburrows/table-web-component",
   "description": "A very flexible table written as a Lit-based web component. Sorting capabilities and sensible defaults. Can be used in a headless mode for flexibility.",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "type": "module",
   "module": "dist/index.js",
   "exports": {
@@ -48,7 +48,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "prepare": "npm run build"
+    "prepare": "tsc && vite build"
   },
   "repository": {
     "type": "git",
