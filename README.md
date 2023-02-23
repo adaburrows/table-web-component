@@ -566,33 +566,32 @@ import { TableStore } from '@adaburrows/table/table-store';
 
 // ...
 
-  static render() {
-    render(): TemplateResult {
-      return html`
-      <div id="${this.tableStore.tableId}">
-        ${this.tableStore.caption && this.tableStore.caption != '' && html`<div class="table-caption">${this.tableStore.caption}</div>`}
-        <div class="table-header">
-          ${map(this.tableStore.getHeadings(), (rowValue) => {
-            const {field, value} = rowValue;
-            return html`
-            <div class="table-header table-column-${field}">
-              ${value}
-            </div>`
-          })}
-        </div>
-        <div class="table-body">
-          ${map(this.tableStore.getRows(), (row) => html`
-            <div class="table-row">
-              ${map(row, (rowValue: RowValue) => {
-                const {field, value} = rowValue;
-                return html`<div class="table-cell table-column-${field}">${value}</div>`
-              })}
-            </div>`
-          )}
-        </div>
-      </div>`;
-    }
+  static render(): TemplateResult {
+    return html`
+    <div id="${this.tableStore.tableId}">
+      ${this.tableStore.caption && this.tableStore.caption != '' && html`<div class="table-caption">${this.tableStore.caption}</div>`}
+      <div class="table-header">
+        ${map(this.tableStore.getHeadings(), (rowValue) => {
+          const {field, value} = rowValue;
+          return html`
+          <div class="table-header table-column-${field}">
+            ${value}
+          </div>`
+        })}
+      </div>
+      <div class="table-body">
+        ${map(this.tableStore.getRows(), (row) => html`
+          <div class="table-row">
+            ${map(row, (rowValue: RowValue) => {
+              const {field, value} = rowValue;
+              return html`<div class="table-cell table-column-${field}">${value}</div>`
+            })}
+          </div>`
+        )}
+      </div>
+    </div>`;
   }
+
 
 // ...
 ```
