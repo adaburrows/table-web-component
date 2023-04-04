@@ -10,7 +10,8 @@ import { Table } from '../src/table';
  */
 type TwoBits = {
   'b1': number,
-  'b0': number
+  'b0': number,
+  'should_not_show_up': number
 }
 
 /**
@@ -18,7 +19,7 @@ type TwoBits = {
  */
 const fieldDefs: FieldDefinitions<TwoBits> = {
   'b1': new FieldDefinition<TwoBits>({heading: '2^1'}),
-  'b0': new FieldDefinition<TwoBits>({heading: '2^0'})
+  'b0': new FieldDefinition<TwoBits>({heading: '2^0'}),
 }
 
 /**
@@ -43,10 +44,10 @@ export class TableTestSimple extends ScopedRegistryHost(LitElement) {
       tableId: 'simple',
       fieldDefs,
       records: [
-        { 'b1': 0, 'b0': 0 },
-        { 'b1': 0, 'b0': 1 },
-        { 'b1': 1, 'b0': 0 },
-        { 'b1': 1, 'b0': 1 },
+        { 'b1': 0, 'b0': 0, 'should_not_show_up': 1 },
+        { 'b1': 0, 'b0': 1, 'should_not_show_up': 1 },
+        { 'b1': 1, 'b0': 0, 'should_not_show_up': 1 },
+        { 'b1': 1, 'b0': 1, 'should_not_show_up': 1 },
       ],
       showHeader: true
     });

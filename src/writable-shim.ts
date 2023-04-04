@@ -1,11 +1,13 @@
 import {
   Subscriber,
   Unsubscriber,
+  // Updater,
+  // Writable,
 } from "svelte/store";
 
 // Svelte types which are not exported
 export type Invalidator<T> = (value?: T) => void;
-export type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidator<T>];
+export type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidator<T> | undefined];
 
 export class WritableShim<T extends {}> {
   #_subscribers: Set<SubscribeInvalidateTuple<T>> = new Set();
@@ -23,7 +25,7 @@ export class WritableShim<T extends {}> {
 		if (stop != undefined) { // store is ready
       const run_queue = !this.#_subscriberQueue.length;
       for (const subscriber of this.#_subscribers) {
-        subscriber[1]();
+        subscriber[1] && subscriber[1]();
         this.#_subscriberQueue.push(subscriber, {});
       }
       if (run_queue) {
@@ -35,18 +37,21 @@ export class WritableShim<T extends {}> {
     }
 	}
 
+  // TODO: implement this so it complies with the writable interface
+  //update(this: void, updater: Updater<T>): void {}
+
   /**
    * Implements the Readable interface.
    *
    * This code was gently modified from the "svelte/store" code.
    */
-  subscribe(run: Subscriber<{}>, invalidate: Invalidator<{}> = ()=>{}): Unsubscriber {
+  subscribe(run: Subscriber<T>, invalidate: Invalidator<T> | undefined): Unsubscriber {
     const subscriber: SubscribeInvalidateTuple<T> = [run, invalidate];
 		this.#_subscribers.add(subscriber);
 		if (this.#_subscribers.size === 1) {
 			this.#_stop = ()=>{};
 		}
-		run({});
+		run({} as T);
 
 		return () => {
 			this.#_subscribers.delete(subscriber);

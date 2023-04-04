@@ -248,9 +248,12 @@ export class TableStore<T extends object> extends WritableShim<{}> implements Re
   getRows(): RowValue[][] {
     const fieldDefs = this.#_fieldDefs;
     return this.#_sort(this.#_records.map(
-      (record) => {
-        const synthsizedRecord = { ...record };
+      (record: T) => {
+        const synthsizedRecord = {} as T;
         for (let [field, fieldDef] of fieldDefs) {
+          // @ts-ignore
+          synthsizedRecord[field] = record[field];
+
           // Functions to synthesize and decorate fields
           const { synthesizer, decorator } = fieldDef;
 
