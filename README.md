@@ -8,14 +8,14 @@
 First, make sure you install the package and its necessary dependencies. Since this project assumes you're using Lit, it expects that to be included by your project. It also expects lit-svelte-stores to be loaded. If you're not using any of those directly, make sure they are set as peer dependencies. Like so:
 
 ```
-npm i --save adaburrows/table-web-component
+npm add adaburrows/table-web-component
 ```
 
-If you're not making a component using the scoped registry mixin, then you can import everything you need in one line:
+If you're not making a component using the scoped registry mixin, then you can import everything you need:
 
 ```ts
 // This registers the <adaburrows-table> and <adaburrows-table-context> tags globally
-import { FieldDefinitions, FieldDefinition, TableStore } from '@adaburrows/table-web-component';
+import { FieldDefinitions, FieldDefinition, TableStore } from '@adaburrows/table-web-component/global';
 ```
 
 Otherwise, you can use choose to use the scoped registry mixin:
@@ -24,16 +24,13 @@ Otherwise, you can use choose to use the scoped registry mixin:
 import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-// The following are required because this doesn't register the components globally
-import { FieldDefinitions, FieldDefinition } from '@adaburrows/table-web-component/field-definitions';
-import { TableStore } from '@adaburrows/table-web-component/table-store';
-import { Table } from '@adaburrows/table-web-component/table';
+import { FieldDefinitions, FieldDefinition, TableStore, Table } from '@adaburrows/table-web-component';
 ```
 
 If you choose to use the ScopedRegistryHost mixin in your project, make sure you install it and include the polyfill in your index.html or be sure to import it in you top level index.ts beofre you load you own component code:
 
 ```
-npm i --save @webcomponents/scoped-custom-element-registry @lit-labs/scoped-registry-mixin
+npm add @webcomponents/scoped-custom-element-registry @lit-labs/scoped-registry-mixin
 ```
 
 ```html
@@ -45,6 +42,14 @@ or
 ```js
 import @webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js;
 ```
+
+Additionally, one can use the library with React by importing the following:
+
+```ts
+import { FieldDefinitions, FieldDefinition, TableStore, Table } from '@adaburrows/table-web-component/react';
+```
+
+There may be a few issues around using this with React, as the library expects lit-html templates, and not necessarily React components. Since you do have the option to use the `TableStore`, this may not be an issue. Just use the store and the utilities in [`react-store-adaptors`](https://github.com/adaburrows/react-store-adaptors) to build your own table rendering code. See the Headless Usage section for more details.
 
 Then set up the data that will be displayed. In this case, we're just going to show a simple 2 bit truth table.
 
@@ -596,4 +601,4 @@ import { TableStore } from '@adaburrows/table/table-store';
 // ...
 ```
 
-Additionally, if you want to use React as your framework. Then it would be pretty simple to use [`react-store-adaptors`](https://github.com/adaburrows/react-store-adaptors) to adapt the Svelte store to your JSX/TSX component. Otherwise, just import the React wrapped components from `@adaburrows/table-web-component/react-table` and `@adaburrows/table-web-component/react-table-context-element`.
+Additionally, if you want to use React as your framework. Then it would be pretty simple to use [`react-store-adaptors`](https://github.com/adaburrows/react-store-adaptors) to adapt the Svelte store to your JSX/TSX component. Otherwise, just import the React wrapped components from `@adaburrows/table-web-component/react`.

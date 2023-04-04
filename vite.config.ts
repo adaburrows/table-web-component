@@ -11,11 +11,12 @@ export default defineConfig({
         'src/table-context.ts',
         'src/table-context-element.ts',
         'src/field-definitions.ts',
-        'src/react-table.ts',
-        'src/react-table-context-element.ts'
+        'src/react.ts',
+        'src/global.ts'
       ],
       formats: ['es'],
     },
+    target: "ES2015",
     rollupOptions: {
       external: [/^lit/, /^lit-svelte-stores/],
     },

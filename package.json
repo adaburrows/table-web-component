@@ -1,67 +1,39 @@
 {
   "name": "@adaburrows/table-web-component",
   "description": "A very flexible table written as a Lit-based web component. Sorting capabilities and sensible defaults. Can be used in a headless mode for flexibility.",
-  "version": "0.9.1",
-  "type": "module",
-  "module": "dist/index.js",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "types": "./types/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./table": {
-      "types": "./types/table.d.ts",
-      "import": "./dist/table.js"
-    },
-    "./react-table": {
-      "types": "./types/react-table.d.ts",
-      "import": "./dist/react-table.js"
-    },
-    "./table-store": {
-      "types": "./types/table-store.d.ts",
-      "import": "./dist/table-store.js"
-    },
-    "./table-context": {
-      "types": "./types/table-context.d.ts",
-      "import": "./dist/table-context.js"
-    },
-    "./table-context-element": {
-      "types": "./types/table-context-element.d.ts",
-      "import": "./dist/table-context-element.js"
-    },
-    "./react-table-context-element": {
-      "types": "./types/react-table-context-element.d.ts",
-      "import": "./dist/react-table-context-element.js"
-    },
-    "./field-definitions": {
-      "types": "./types/field-definitions.d.ts",
-      "import": "./dist/field-definitions.js"
-    }
-  },
-  "types": "types/index.d.ts",
-  "files": [
-    "dist",
-    "types",
-    "src"
-  ],
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "prepare": "tsc && vite build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/adaburrows/table-web-component.git"
+  "version": "0.9.3",
+  "author": "Jillian Ada Burrows <jill@adaburrows.com>",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/adaburrows/table-web-component/issues"
   },
   "keywords": [
     "UI",
     "table"
   ],
-  "author": "Jillian Ada Burrows",
-  "license": "Apache 2.0",
-  "bugs": {
-    "url": "https://github.com/adaburrows/table-web-component/issues"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adaburrows/table-web-component.git"
+  },
+  "type": "module",
+  "module": "./dist/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "package.json",
+    "README.md"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./react": "./dist/react.js",
+    "./global": "./dist/global.js"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc --project ./tsconfig.prod.json --outdir ./dist",
+    "prepare": "tsc && vite build"
   },
   "dependencies": {
     "@lit-labs/context": "^0.2.0",
