@@ -1,7 +1,7 @@
 {
   "name": "@adaburrows/table-web-component",
   "description": "A very flexible table written as a Lit-based web component. Sorting capabilities and sensible defaults. Can be used in a headless mode for flexibility.",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "author": "Jillian Ada Burrows <jill@adaburrows.com>",
   "license": "Apache 2.0",
   "bugs": {
@@ -33,7 +33,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc --project ./tsconfig.prod.json --outdir ./dist",
-    "prepare": "tsc && vite build"
+    "prepare": "vite build && tsc --project ./tsconfig.prod.json --outdir ./dist"
   },
   "dependencies": {
     "@lit-labs/context": "^0.2.0",
