@@ -1,9 +1,7 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { FieldDefinitions, FieldDefinition} from '../src/field-definitions';
-import { TableStore } from '../src/table-store';
-import { Table } from '../src/table';
+import { FieldDefinitions, FieldDefinition, TableStore, Table} from '../src/index';
 
 /**
  * Here's our data schema

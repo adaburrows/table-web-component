@@ -2,10 +2,15 @@ import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { map } from 'lit/directives/map.js';
-import { TableContextElement } from '../src/table-context-element';
-import { TableStore } from '../src/table-store';
-import { Table } from '../src/table';
-import { FieldDefinitions, FieldDefinition, numeric, lexicographic } from '../src/field-definitions';
+import {
+  FieldDefinitions,
+  FieldDefinition,
+  TableStore,
+  TableContextElement,
+  Table,
+  numeric,
+  lexicographic
+} from '../src/index';
 
 /**
  * Here's our data schema

@@ -1,7 +1,7 @@
 {
   "name": "@adaburrows/table-web-component",
   "description": "A very flexible table written as a Lit-based web component. Sorting capabilities and sensible defaults. Can be used in a headless mode for flexibility.",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "author": "Jillian Ada Burrows <jill@adaburrows.com>",
   "license": "Apache 2.0",
   "bugs": {
